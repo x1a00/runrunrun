@@ -214,8 +214,18 @@ function ElevationPanel({ run }: { run: NotableRun }) {
   );
 }
 
+// ISO 3166 alpha-2 → regional indicator emoji (AQ has no flag → snowflake).
+function codeToFlag(code?: string) {
+  if (!code || code.length !== 2) return "";
+  if (code.toUpperCase() === "AQ") return "\u2744\uFE0F";
+  return String.fromCodePoint(
+    ...[...code.toUpperCase()].map((c) => 0x1f1e6 + (c.charCodeAt(0) - 65)),
+  );
+}
+
 function DetailsPanel({ run }: { run: NotableRun }) {
   const Icon = WEATHER_ICON[run.weather];
+  const flag = codeToFlag(run.location.countryCode);
   return (
     <div className="flex flex-col items-start gap-4 font-mono-tamzen text-sm">
       <h3 className="font-sans text-lg font-bold text-neutral-100">
@@ -230,15 +240,17 @@ function DetailsPanel({ run }: { run: NotableRun }) {
       <div className="flex items-center gap-3">
         <div>
           <div className="text-xl font-sans font-bold text-neutral-100">{run.tempF}°F</div>
-          <div className="text-xs uppercase text-neutral-500">CLOUDS</div>
+          <div className="text-xs uppercase text-neutral-500">{run.weather}</div>
         </div>
         <Icon className="text-neutral-300" size={20} />
       </div>
       <div>
-        <div className="font-sans text-lg font-bold text-neutral-100">
-          {run.location.city ?? run.location.country}
+        <div className="font-sans text-lg font-bold text-neutral-100 flex items-center gap-2">
+          {flag ? <span aria-hidden className="text-base">{flag}</span> : null}
+          <span>{run.location.city ?? run.location.country}</span>
         </div>
         <div className="text-xs uppercase text-neutral-500">
+          {run.location.region ? `${run.location.region} · ` : ""}
           {run.location.country.toUpperCase()}
         </div>
       </div>
