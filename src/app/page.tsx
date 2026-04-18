@@ -1,9 +1,23 @@
+import { Header } from "@/components/sections/header";
+import { StreakHero } from "@/components/sections/streak-hero";
+import { Foreword } from "@/components/sections/foreword";
+import { NotableRuns } from "@/components/sections/notable-runs";
+import { Statistics } from "@/components/sections/statistics";
+import { Geography } from "@/components/sections/geography";
+import { DailyLog } from "@/components/sections/daily-log";
+import { SiteFooter } from "@/components/sections/site-footer";
+
 export default function Home() {
   return (
-    <main className="flex min-h-screen items-center justify-center">
-      <p className="text-muted-foreground">
-        Clone target not yet built. Run <code className="font-mono text-foreground">/clone-website</code> to start.
-      </p>
-    </main>
+    <div className="container min-h-screen mx-auto p-8">
+      <Header />
+      <StreakHero />
+      <Foreword />
+      <NotableRuns />
+      <Statistics />
+      <Geography />
+      <DailyLog />
+      <SiteFooter />
+    </div>
   );
 }
