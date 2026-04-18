@@ -1,5 +1,8 @@
-// Domain types for the no-days-off clone. All distances in MILES, elevation in FEET,
-// pace as seconds per mile.
+// Domain types. METRIC UNITS ONLY:
+//   - distance in kilometers
+//   - elevation in meters
+//   - pace as seconds per kilometer
+//   - duration as MOVING seconds (stops excluded, per GPX auto-pause logic)
 
 export interface ActivityLocation {
   country: string;
@@ -21,12 +24,12 @@ export type WeatherCondition =
 export interface Activity {
   id: string;
   date: string; // ISO YYYY-MM-DD
-  distanceMi: number;
-  durationSec: number;
-  elevationFt?: number;
-  paceSecPerMi?: number;
+  distanceKm: number;
+  movingSec: number;
+  elevationM?: number;
+  paceSecPerKm?: number;
   avgHeartRate?: number;
-  tempF?: number;
+  tempC?: number;
   weather?: WeatherCondition;
   shoe?: string;
   location: ActivityLocation;
@@ -39,19 +42,19 @@ export interface Activity {
 export interface NotableRun {
   rank: number;
   date: string;
-  distanceMi: number;
-  durationSec: number;
-  paceSecPerMi: number;
-  elevationFt: number;
-  tempF: number;
+  distanceKm: number;
+  movingSec: number;
+  paceSecPerKm: number;
+  elevationM: number;
+  tempC: number;
   weather: WeatherCondition;
   title?: string;
   location: ActivityLocation;
   gpxPath?: string;
   /** Key into `gpxTracks` when this run has a real GPS trace. */
   gpxId?: string;
-  // Small elevation+pace profile series (sampled every ~0.5 mi)
-  profile?: { mile: number; ft: number; paceSecPerMi: number }[];
+  // Small elevation+pace profile series (sampled every ~0.5 km)
+  profile?: { km: number; m: number; paceSecPerKm: number }[];
 }
 
 export type NotableRunCategory =
@@ -66,9 +69,9 @@ export interface StreakStats {
   startDate: string;
   endDate: string;
   totalDays: number;
-  totalMiles: number;
+  totalKm: number;
   totalHours: number;
-  totalElevationFt: number;
+  totalElevationM: number;
   years: number;
   months: number;
   days: number;
@@ -76,7 +79,7 @@ export interface StreakStats {
 
 export interface AnnualMileage {
   year: number;
-  miles: number;
+  km: number;
 }
 
 export interface HistogramBucket {
@@ -88,18 +91,18 @@ export interface GeoRow {
   name: string;
   code?: string;
   days: number;
-  miles: number;
+  km: number;
 }
 
 export interface HeatmapCell {
   date: string;
-  miles: number;
+  km: number;
 }
 
 export interface StreakYearHeatmap {
   yearNumber: number;
   label: string;
-  totalMiles: number;
+  totalKm: number;
   avgPerDay: number;
   inProgress?: boolean;
   cells: HeatmapCell[];

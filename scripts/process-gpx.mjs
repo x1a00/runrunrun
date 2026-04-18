@@ -1,7 +1,15 @@
 #!/usr/bin/env node
 // Preprocess GPX files under public/gpx into a compact TypeScript module
 // at src/lib/gpx-processed.ts. Downsamples to ~500 points per track and
-// computes aggregate stats (distance, duration, elevation gain, pace, HR).
+// computes aggregate stats in METRIC UNITS ONLY:
+//   - distance in kilometers
+//   - elevation gain in meters
+//   - pace as seconds per kilometer (using MOVING time, not total elapsed)
+//   - duration is MOVING time (stops are excluded)
+//
+// Moving-time rule: a pair of adjacent trackpoints counts as "moving" iff
+// the time gap is ≤ MAX_SAMPLE_GAP_SEC AND the average speed between them is
+// ≥ MIN_MOVING_MPS. This mirrors Strava-style auto-pause.
 //
 // Usage: node scripts/process-gpx.mjs
 
@@ -15,9 +23,11 @@ const GPX_DIR = join(ROOT, "public", "gpx");
 const OUT = join(ROOT, "src", "lib", "gpx-processed.ts");
 
 const TARGET_POINTS = 500;
+const MAX_SAMPLE_GAP_SEC = 15; // bigger gaps → treat as paused
+const MIN_MOVING_MPS = 0.4; // below ~1.4 km/h → not moving
 
-function haversineMi(a, b) {
-  const R = 3958.7613; // miles
+function haversineKm(a, b) {
+  const R = 6371.0088; // km
   const toRad = (deg) => (deg * Math.PI) / 180;
   const dLat = toRad(b.lat - a.lat);
   const dLon = toRad(b.lon - a.lon);
@@ -63,34 +73,49 @@ function downsample(points, target) {
 }
 
 function aggregate(points, gpxName) {
-  let totalMi = 0;
-  let cumMiAt = [0];
-  for (let i = 1; i < points.length; i++) {
-    totalMi += haversineMi(points[i - 1], points[i]);
-    cumMiAt.push(totalMi);
-  }
-  const t0 = points[0].time ? Date.parse(points[0].time) : null;
-  const t1 = points[points.length - 1].time ? Date.parse(points[points.length - 1].time) : null;
-  const durationSec = t0 && t1 ? Math.round((t1 - t0) / 1000) : null;
-
-  // Elevation gain = sum of positive deltas (meters; convert to feet)
+  let totalKm = 0;
+  let movingSec = 0;
+  let cumKmAt = [0];
   let gainM = 0;
+
   for (let i = 1; i < points.length; i++) {
-    if (points[i].ele != null && points[i - 1].ele != null) {
-      const d = points[i].ele - points[i - 1].ele;
-      if (d > 0) gainM += d;
+    const a = points[i - 1];
+    const b = points[i];
+    const segKm = haversineKm(a, b);
+    totalKm += segKm;
+    cumKmAt.push(totalKm);
+
+    // Moving time
+    if (a.time && b.time) {
+      const dt = (Date.parse(b.time) - Date.parse(a.time)) / 1000;
+      if (dt > 0 && dt <= MAX_SAMPLE_GAP_SEC) {
+        const mps = (segKm * 1000) / dt;
+        if (mps >= MIN_MOVING_MPS) {
+          movingSec += dt;
+        }
+      }
+      // Gaps > MAX_SAMPLE_GAP_SEC are treated as paused, skipped.
+    }
+
+    // Elevation gain (meters of positive delta)
+    if (b.ele != null && a.ele != null) {
+      const dEle = b.ele - a.ele;
+      if (dEle > 0) gainM += dEle;
     }
   }
-  const elevationFt = Math.round(gainM * 3.28084);
+
+  const t0 = points[0].time ? Date.parse(points[0].time) : null;
+  const t1 = points[points.length - 1].time ? Date.parse(points[points.length - 1].time) : null;
+  const elapsedSec = t0 && t1 ? Math.round((t1 - t0) / 1000) : null;
 
   // Avg HR
   const hrs = points.map((p) => p.hr).filter((v) => typeof v === "number");
   const avgHr = hrs.length ? Math.round(hrs.reduce((a, b) => a + b, 0) / hrs.length) : null;
 
-  const paceSecPerMi =
-    durationSec && totalMi > 0.1 ? Math.round(durationSec / totalMi) : null;
+  const movingSecRounded = Math.round(movingSec);
+  const paceSecPerKm =
+    movingSecRounded > 0 && totalKm > 0.1 ? Math.round(movingSecRounded / totalKm) : null;
 
-  // Bounding box
   const lats = points.map((p) => p.lat);
   const lons = points.map((p) => p.lon);
   const bbox = {
@@ -102,15 +127,16 @@ function aggregate(points, gpxName) {
 
   return {
     name: gpxName,
-    distanceMi: +totalMi.toFixed(3),
-    durationSec,
-    paceSecPerMi,
-    elevationFt,
+    distanceKm: +totalKm.toFixed(3),
+    movingSec: movingSecRounded,
+    elapsedSec,
+    paceSecPerKm,
+    elevationM: Math.round(gainM),
     avgHr,
     startTime: points[0]?.time ?? null,
     endTime: points[points.length - 1]?.time ?? null,
     bbox,
-    cumMiAt,
+    cumKmAt,
   };
 }
 
@@ -121,10 +147,10 @@ function processFile(path, id) {
   if (!all.length) throw new Error(`No trkpt in ${path}`);
   const aggAll = aggregate(all, name);
   const sampled = downsample(all, TARGET_POINTS);
-  // Recompute cumulative miles for sampled array so index aligns with sampled points
-  const cumMi = [0];
+  // Recompute cumulative km for sampled array so index aligns with sampled points
+  const cumKm = [0];
   for (let i = 1; i < sampled.length; i++) {
-    cumMi.push(cumMi[i - 1] + haversineMi(sampled[i - 1], sampled[i]));
+    cumKm.push(cumKm[i - 1] + haversineKm(sampled[i - 1], sampled[i]));
   }
   return {
     id,
@@ -135,7 +161,7 @@ function processFile(path, id) {
       lon: +p.lon.toFixed(6),
       ele: p.ele != null ? +p.ele.toFixed(1) : null,
       hr: p.hr ?? null,
-      mi: +cumMi[i].toFixed(3),
+      km: +cumKm[i].toFixed(3),
     })),
   };
 }
@@ -154,26 +180,28 @@ function main() {
 
   const header = `// AUTO-GENERATED by scripts/process-gpx.mjs — do not edit.
 // Run: node scripts/process-gpx.mjs
+// All values are metric. Duration is MOVING time (stops excluded).
 
 export interface GpxPoint {
   lat: number;
   lon: number;
-  ele: number | null;
+  ele: number | null;   // meters above sea level
   hr: number | null;
-  mi: number; // cumulative miles from start
+  km: number;           // cumulative km from start
 }
 
 export interface GpxStats {
   name: string;
-  distanceMi: number;
-  durationSec: number | null;
-  paceSecPerMi: number | null;
-  elevationFt: number;
+  distanceKm: number;
+  movingSec: number;              // active moving seconds (auto-pause)
+  elapsedSec: number | null;      // wall-clock seconds start→end
+  paceSecPerKm: number | null;    // movingSec / distanceKm
+  elevationM: number;             // positive delta sum, meters
   avgHr: number | null;
   startTime: string | null;
   endTime: string | null;
   bbox: { minLat: number; maxLat: number; minLon: number; maxLon: number };
-  cumMiAt: number[];
+  cumKmAt: number[];
 }
 
 export interface GpxTrack {
@@ -193,10 +221,11 @@ export const gpxTracks: Record<string, GpxTrack> = ${JSON.stringify(
   writeFileSync(OUT, header);
   console.log(`Wrote ${OUT} (${tracks.length} tracks)`);
   for (const t of tracks) {
+    const pace = t.stats.paceSecPerKm
+      ? `${Math.floor(t.stats.paceSecPerKm / 60)}:${String(t.stats.paceSecPerKm % 60).padStart(2, "0")}/km`
+      : "?";
     console.log(
-      `  ${t.id}: ${t.points.length} points, ${t.stats.distanceMi.toFixed(2)} mi, ${
-        t.stats.durationSec ? Math.round(t.stats.durationSec / 60) + "min" : "?"
-      }, +${t.stats.elevationFt}ft`,
+      `  ${t.id}: ${t.points.length} pts, ${t.stats.distanceKm.toFixed(2)} km, moving ${Math.round(t.stats.movingSec / 60)}min (elapsed ${Math.round((t.stats.elapsedSec ?? 0) / 60)}min), +${t.stats.elevationM}m, ${pace}`,
     );
   }
 }

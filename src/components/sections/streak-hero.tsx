@@ -12,12 +12,12 @@ export function StreakHero() {
       </div>
       <div className="flex flex-wrap justify-center gap-x-10 gap-y-4">
         <StatCell size="lg" value={formatNumber(streakStats.totalDays)} label="days" />
-        <StatCell size="lg" value={formatNumber(streakStats.totalMiles)} label="miles" />
+        <StatCell size="lg" value={formatNumber(streakStats.totalKm)} label="km" />
         <StatCell size="lg" value={formatNumber(streakStats.totalHours)} label="hours" />
         <StatCell
           size="lg"
-          value={formatThousands(streakStats.totalElevationFt)}
-          label="ft climbed"
+          value={formatThousands(streakStats.totalElevationM)}
+          label="m climbed"
         />
       </div>
     </div>

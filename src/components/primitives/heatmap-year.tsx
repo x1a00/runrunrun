@@ -4,10 +4,10 @@ import { formatNumber } from "@/lib/format";
 const DOW_LABELS = ["M", "T", "W", "T", "F", "S", "S"];
 const MONTH_LABELS = ["Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
 
-// Map miles -> greyscale fill. Empty -> neutral-900.
-function cellFill(miles: number, max: number) {
-  if (!miles) return "#171717"; // neutral-900
-  const t = Math.min(1, miles / max);
+// Map km -> greyscale fill. Empty -> neutral-900.
+function cellFill(km: number, max: number) {
+  if (!km) return "#171717"; // neutral-900
+  const t = Math.min(1, km / max);
   // Range 28..94 (matches captured neutral-800..neutral-600 spread)
   const v = Math.round(28 + t * 66);
   return `rgb(${v},${v},${v})`;
@@ -22,9 +22,9 @@ export function HeatmapYear({ data }: { data: StreakYearHeatmap }) {
   const width = labelW + weeks * (cellSize + gap);
   const height = rows * (cellSize + gap) + 20;
 
-  // Max miles for intensity scaling — cap at 95th pct to avoid any outlier washing colors
-  const sortedMiles = data.cells.map((c) => c.miles).slice().sort((a, b) => a - b);
-  const max = sortedMiles[Math.floor(sortedMiles.length * 0.95)] || 1;
+  // Max km for intensity scaling — cap at 95th pct to avoid any outlier washing colors
+  const sortedKm = data.cells.map((c) => c.km).slice().sort((a, b) => a - b);
+  const max = sortedKm[Math.floor(sortedKm.length * 0.95)] || 1;
 
   // Place cells into a grid: Monday-first weeks
   const cells = data.cells.map((c, i) => {
@@ -42,7 +42,7 @@ export function HeatmapYear({ data }: { data: StreakYearHeatmap }) {
           <span className="ml-2 text-neutral-500">({data.label})</span>
         </div>
         <div className="text-neutral-400">
-          {formatNumber(data.totalMiles)} miles
+          {formatNumber(data.totalKm)} km
           {data.inProgress ? <span className="text-neutral-500"> (so far)</span> : null}
           <span className="ml-2 text-neutral-500">(avg {data.avgPerDay.toFixed(1)}/day)</span>
         </div>
@@ -66,9 +66,9 @@ export function HeatmapYear({ data }: { data: StreakYearHeatmap }) {
             y={c.dow * (cellSize + gap)}
             width={cellSize}
             height={cellSize}
-            fill={cellFill(c.miles, max)}
+            fill={cellFill(c.km, max)}
           >
-            <title>{`${c.date} — ${c.miles.toFixed(2)} mi`}</title>
+            <title>{`${c.date} — ${c.km.toFixed(2)} km`}</title>
           </rect>
         ))}
         {MONTH_LABELS.map((m, i) => {
