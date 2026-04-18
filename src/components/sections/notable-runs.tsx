@@ -230,7 +230,7 @@ function DetailsPanel({ run }: { run: NotableRun }) {
       <div className="flex items-center gap-3">
         <div>
           <div className="text-xl font-sans font-bold text-neutral-100">{run.tempF}°F</div>
-          <div className="text-xs uppercase text-neutral-500">CLOUDS</div>
+          <div className="text-xs uppercase text-neutral-500">{run.weather}</div>
         </div>
         <Icon className="text-neutral-300" size={20} />
       </div>
