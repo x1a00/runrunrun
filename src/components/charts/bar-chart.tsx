@@ -78,13 +78,15 @@ export function BarChart({
         </text>
       ) : null}
       {yAxisLabel ? (
+        // Bitmap fonts don't survive rotation cleanly, so use the sans stack
+        // for the rotated axis label.
         <text
           x={12}
           y={padT + innerH / 2}
           textAnchor="middle"
           transform={`rotate(-90, 12, ${padT + innerH / 2})`}
-          className="fill-neutral-500 font-tamzen-sm"
-          fontSize={9}
+          className="fill-neutral-500 font-sans"
+          fontSize={10}
         >
           {yAxisLabel}
         </text>

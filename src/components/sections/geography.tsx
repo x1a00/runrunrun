@@ -3,12 +3,40 @@ import { DataTable } from "@/components/primitives/data-table";
 import type { GeoRow } from "@/types/activity";
 import { formatNumber } from "@/lib/format";
 
+// ISO 3166 alpha-2 → regional indicator emoji. Antarctica (AQ) has no flag,
+// so we draw a snowflake there.
+function codeToFlag(code?: string) {
+  if (!code || code.length !== 2) return "";
+  if (code.toUpperCase() === "AQ") return "\u2744\uFE0F"; // ❄️
+  const cc = code.toUpperCase();
+  return String.fromCodePoint(
+    ...[...cc].map((c) => 0x1f1e6 + (c.charCodeAt(0) - 65)),
+  );
+}
+
 const cols = [
-  { key: "name", header: "COUNTRY", cell: (r: GeoRow) => r.name },
+  {
+    key: "name",
+    header: "COUNTRY",
+    cell: (r: GeoRow) => (
+      <span className="inline-flex items-center gap-2">
+        <span aria-hidden className="text-base leading-none">{codeToFlag(r.code)}</span>
+        <span>{r.name}</span>
+      </span>
+    ),
+  },
   { key: "days", header: "DAYS", align: "right" as const, cell: (r: GeoRow) => formatNumber(r.days) },
   { key: "miles", header: "↓MILES", align: "right" as const, cell: (r: GeoRow) => formatNumber(r.miles, 1) },
 ];
-const stateCols = [{ ...cols[0], header: "STATE" }, cols[1], cols[2]];
+const stateCols = [
+  {
+    key: "name",
+    header: "STATE",
+    cell: (r: GeoRow) => r.name,
+  },
+  cols[1],
+  cols[2],
+];
 
 export function Geography() {
   const half = Math.ceil(usStatesVisited.length / 2);
