@@ -1,0 +1,204 @@
+#!/usr/bin/env node
+// Preprocess GPX files under public/gpx into a compact TypeScript module
+// at src/lib/gpx-processed.ts. Downsamples to ~500 points per track and
+// computes aggregate stats (distance, duration, elevation gain, pace, HR).
+//
+// Usage: node scripts/process-gpx.mjs
+
+import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join, dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const ROOT = resolve(__dirname, "..");
+const GPX_DIR = join(ROOT, "public", "gpx");
+const OUT = join(ROOT, "src", "lib", "gpx-processed.ts");
+
+const TARGET_POINTS = 500;
+
+function haversineMi(a, b) {
+  const R = 3958.7613; // miles
+  const toRad = (deg) => (deg * Math.PI) / 180;
+  const dLat = toRad(b.lat - a.lat);
+  const dLon = toRad(b.lon - a.lon);
+  const la1 = toRad(a.lat);
+  const la2 = toRad(b.lat);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(la1) * Math.cos(la2) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+function parseTrkpts(xml) {
+  // Robust enough for Strava-exported GPX 1.1.
+  const pts = [];
+  const re = /<trkpt\s+lat="([^"]+)"\s+lon="([^"]+)">([\s\S]*?)<\/trkpt>/g;
+  let m;
+  while ((m = re.exec(xml)) !== null) {
+    const lat = parseFloat(m[1]);
+    const lon = parseFloat(m[2]);
+    const body = m[3];
+    const ele = matchFloat(body, /<ele>([^<]+)<\/ele>/);
+    const time = matchStr(body, /<time>([^<]+)<\/time>/);
+    const hr = matchFloat(body, /<gpxtpx:hr>([^<]+)<\/gpxtpx:hr>/);
+    pts.push({ lat, lon, ele, time, hr });
+  }
+  return pts;
+}
+
+function matchFloat(s, re) {
+  const m = s.match(re);
+  return m ? parseFloat(m[1]) : null;
+}
+function matchStr(s, re) {
+  const m = s.match(re);
+  return m ? m[1] : null;
+}
+
+function downsample(points, target) {
+  if (points.length <= target) return points.slice();
+  const step = points.length / target;
+  const out = [];
+  for (let i = 0; i < target; i++) out.push(points[Math.floor(i * step)]);
+  out.push(points[points.length - 1]); // keep endpoint
+  return out;
+}
+
+function aggregate(points, gpxName) {
+  let totalMi = 0;
+  let cumMiAt = [0];
+  for (let i = 1; i < points.length; i++) {
+    totalMi += haversineMi(points[i - 1], points[i]);
+    cumMiAt.push(totalMi);
+  }
+  const t0 = points[0].time ? Date.parse(points[0].time) : null;
+  const t1 = points[points.length - 1].time ? Date.parse(points[points.length - 1].time) : null;
+  const durationSec = t0 && t1 ? Math.round((t1 - t0) / 1000) : null;
+
+  // Elevation gain = sum of positive deltas (meters; convert to feet)
+  let gainM = 0;
+  for (let i = 1; i < points.length; i++) {
+    if (points[i].ele != null && points[i - 1].ele != null) {
+      const d = points[i].ele - points[i - 1].ele;
+      if (d > 0) gainM += d;
+    }
+  }
+  const elevationFt = Math.round(gainM * 3.28084);
+
+  // Avg HR
+  const hrs = points.map((p) => p.hr).filter((v) => typeof v === "number");
+  const avgHr = hrs.length ? Math.round(hrs.reduce((a, b) => a + b, 0) / hrs.length) : null;
+
+  const paceSecPerMi =
+    durationSec && totalMi > 0.1 ? Math.round(durationSec / totalMi) : null;
+
+  // Bounding box
+  const lats = points.map((p) => p.lat);
+  const lons = points.map((p) => p.lon);
+  const bbox = {
+    minLat: Math.min(...lats),
+    maxLat: Math.max(...lats),
+    minLon: Math.min(...lons),
+    maxLon: Math.max(...lons),
+  };
+
+  return {
+    name: gpxName,
+    distanceMi: +totalMi.toFixed(3),
+    durationSec,
+    paceSecPerMi,
+    elevationFt,
+    avgHr,
+    startTime: points[0]?.time ?? null,
+    endTime: points[points.length - 1]?.time ?? null,
+    bbox,
+    cumMiAt,
+  };
+}
+
+function processFile(path, id) {
+  const xml = readFileSync(path, "utf8");
+  const name = matchStr(xml, /<trk>\s*<name>([^<]+)<\/name>/) ?? id;
+  const all = parseTrkpts(xml);
+  if (!all.length) throw new Error(`No trkpt in ${path}`);
+  const aggAll = aggregate(all, name);
+  const sampled = downsample(all, TARGET_POINTS);
+  // Recompute cumulative miles for sampled array so index aligns with sampled points
+  const cumMi = [0];
+  for (let i = 1; i < sampled.length; i++) {
+    cumMi.push(cumMi[i - 1] + haversineMi(sampled[i - 1], sampled[i]));
+  }
+  return {
+    id,
+    name: aggAll.name,
+    stats: aggAll,
+    points: sampled.map((p, i) => ({
+      lat: +p.lat.toFixed(6),
+      lon: +p.lon.toFixed(6),
+      ele: p.ele != null ? +p.ele.toFixed(1) : null,
+      hr: p.hr ?? null,
+      mi: +cumMi[i].toFixed(3),
+    })),
+  };
+}
+
+function main() {
+  const files = readdirSync(GPX_DIR).filter((f) => f.toLowerCase().endsWith(".gpx"));
+  if (!files.length) {
+    console.error("No .gpx files found in public/gpx/");
+    process.exit(1);
+  }
+  const tracks = files.map((f) => {
+    const id = f.replace(/\.gpx$/i, "");
+    console.log(`Processing ${f}...`);
+    return processFile(join(GPX_DIR, f), id);
+  });
+
+  const header = `// AUTO-GENERATED by scripts/process-gpx.mjs — do not edit.
+// Run: node scripts/process-gpx.mjs
+
+export interface GpxPoint {
+  lat: number;
+  lon: number;
+  ele: number | null;
+  hr: number | null;
+  mi: number; // cumulative miles from start
+}
+
+export interface GpxStats {
+  name: string;
+  distanceMi: number;
+  durationSec: number | null;
+  paceSecPerMi: number | null;
+  elevationFt: number;
+  avgHr: number | null;
+  startTime: string | null;
+  endTime: string | null;
+  bbox: { minLat: number; maxLat: number; minLon: number; maxLon: number };
+  cumMiAt: number[];
+}
+
+export interface GpxTrack {
+  id: string;
+  name: string;
+  stats: GpxStats;
+  points: GpxPoint[];
+}
+
+export const gpxTracks: Record<string, GpxTrack> = ${JSON.stringify(
+    Object.fromEntries(tracks.map((t) => [t.id, t])),
+    null,
+    2,
+  )};
+`;
+
+  writeFileSync(OUT, header);
+  console.log(`Wrote ${OUT} (${tracks.length} tracks)`);
+  for (const t of tracks) {
+    console.log(
+      `  ${t.id}: ${t.points.length} points, ${t.stats.distanceMi.toFixed(2)} mi, ${
+        t.stats.durationSec ? Math.round(t.stats.durationSec / 60) + "min" : "?"
+      }, +${t.stats.elevationFt}ft`,
+    );
+  }
+}
+
+main();
