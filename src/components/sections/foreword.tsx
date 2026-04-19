@@ -6,39 +6,22 @@ export function Foreword() {
       </h2>
       <div className="mx-auto max-w-2xl text-left space-y-4 text-sm leading-6 font-mono-tamzen text-neutral-300">
         <p>
-          I didn&apos;t start running until I was in my late twenties, and even so I
-          would end up in a pattern where I&apos;d get motivated and go on a couple of
-          runs, take a few days off, go on another run the following week, and next
-          thing you know it&apos;s been a month since I last run. Rinse and repeat.
+          A running log, derived directly from GPX files. Everything on this page —
+          totals, paces, distances, maps, elevation — is computed from the raw tracks
+          dropped into <code className="mx-1">public/gpx/</code>. No hand-entered
+          numbers, no placeholder history.
         </p>
         <p>
-          In July 2015, something changed. I headed out on a run on a Tuesday, then
-          did another one the next day, and the day after, and… I took the Friday
-          off. When I woke up on July 11, 2015 I remember thinking{" "}
-          <em>I could have done 4 days in a row</em>, so I set out to try and do that.
-          4 days turned into a week, then a month, then two, then six, then a year,
-          and here I am, ten years later.
+          Moving time is computed with an auto-pause rule: samples more than 15
+          seconds apart or slower than 0.4 m/s are excluded from the denominator.
+          Pace is reported in minutes per kilometer. Elevation is summed from
+          positive deltas along the track.
         </p>
         <p>
-          I&apos;ve had the privilege to run in some amazing places, from the streets
-          of my hometown to the trails of national parks, on all seven continents.
-          I&apos;ve run solo and I&apos;ve run with friends, I&apos;ve run with music
-          and I&apos;ve run with my own thoughts. I&apos;ve run through stress
-          fractures, heart procedures, flus and other physical ailments. I&apos;ve run
-          in frigid sub zero weather and in sweltering heat. Each run has been a new
-          adventure, and I&apos;ve learned something different from every experience.
-        </p>
-        <p>
-          Running has changed my life, and I hope I&apos;ll still keep this going in
-          another decade. I&apos;ve been extremely lucky to have had the support of
-          my wonderful wife Molly throughout this journey, and I couldn&apos;t have
-          done it without her patience, how many times has she heard me say{" "}
-          <em>I&apos;ll be back in a few!</em> in the mornings.
-        </p>
-        <p className="text-right text-neutral-400">
-          Adrien Friggeri
-          <br />
-          July 2025
+          To extend the log, drop additional <code className="mx-1">.gpx</code> files
+          into <code className="mx-1">public/gpx/</code> and run{" "}
+          <code className="mx-1">node scripts/process-gpx.mjs</code>. All analytics
+          sections on this page will update automatically.
         </p>
       </div>
     </section>

@@ -5,13 +5,19 @@ export function formatNumber(n: number, digits = 0): string {
   });
 }
 
-export function formatMiles(n: number, digits = 1): string {
-  return `${formatNumber(n, digits)} mi`;
+export function formatKm(n: number, digits = 1): string {
+  return `${formatNumber(n, digits)} km`;
 }
 
-export function formatPace(secPerMi: number): string {
-  const m = Math.floor(secPerMi / 60);
-  const s = Math.round(secPerMi - m * 60);
+export function formatMeters(n: number): string {
+  return `${formatNumber(n)} m`;
+}
+
+/** Pace as mm:ss/km (no unit suffix — callers append "/km" where needed). */
+export function formatPace(secPerKm: number): string {
+  if (!secPerKm || !isFinite(secPerKm)) return "—";
+  const m = Math.floor(secPerKm / 60);
+  const s = Math.round(secPerKm - m * 60);
   return `${m}:${String(s).padStart(2, "0")}`;
 }
 

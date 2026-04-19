@@ -46,27 +46,26 @@ export function Statistics() {
 
       <div className="grid gap-12 md:grid-cols-2 xl:grid-cols-4 mb-16">
         <ChartCard
-          title="ANNUAL MILEAGE"
-          caption="a slight dip in the last few years, because work and life sometimes gets in the way"
+          title="ANNUAL DISTANCE"
+          caption="kilometers logged per streak year"
         >
           <BarChart
-            data={annualMileage.map((a) => ({ label: String(a.year), value: a.miles }))}
-            yTicks={[0, 600, 1200, 1800, 2400, 3000]}
+            data={annualMileage.map((a) => ({ label: String(a.year), value: a.km }))}
             xAxisLabel="streak year"
-            yAxisLabel="miles"
+            yAxisLabel="km"
           />
         </ChartCard>
 
         <ChartCard
           title="WORKOUT ACTIVITY BY TIME"
-          caption="definitely a morning runner! with the occasional 0:01 run to be sure I get one in that day"
+          caption="distribution of start times across the day"
         >
           <PolarClock data={workoutByTime} />
         </ChartCard>
 
         <ChartCard
-          title="AVERAGE DAILY MILEAGE BY DAY"
-          caption="used to do my long runs on saturdays, switched to wednesdays more recently"
+          title="AVERAGE DAILY DISTANCE BY DAY"
+          caption="kilometers by day of week"
         >
           <RadarChart
             data={avgByWeekday}
@@ -76,7 +75,7 @@ export function Statistics() {
 
         <ChartCard
           title="TREADMILL VS OUTDOOR"
-          caption="i'll always run outside when I can — the treadmill is a tool, not a preference"
+          caption="split between outdoor and treadmill runs"
         >
           <HorizontalBars
             data={[
@@ -91,7 +90,7 @@ export function Statistics() {
       <div className="grid gap-12 md:grid-cols-2 xl:grid-cols-4 mb-16">
         <ChartCard
           title="RUN DISTANCES"
-          caption={'i call the one-milers "streak savers", those have unfortunately become more frequent lately'}
+          caption="count of runs bucketed by distance"
         >
           <BarChart
             data={runDistances.map((b) => ({ label: b.label, value: b.count }))}
@@ -101,7 +100,7 @@ export function Statistics() {
 
         <ChartCard
           title="PACE DISTRIBUTION"
-          caption="pretty much the easy pace I revert to these days"
+          caption="distribution of average pace across runs"
         >
           <DensityChart
             bins={paceDistribution.bins}
@@ -113,22 +112,22 @@ export function Statistics() {
           />
         </ChartCard>
 
-        <ChartCard title="HEART RATE ZONES" caption="most of my runs are easy ones, as they should">
+        <ChartCard title="HEART RATE ZONES" caption="count of runs by average heart rate zone">
           <HorizontalBars data={heartRateZones.map((z) => ({ label: z.label, sub: z.bpm, value: z.count }))} />
         </ChartCard>
 
         <ChartCard
           title="EQUIPMENT"
-          caption="retired shoes, stacked by lifetime mileage"
+          caption="retired shoes, stacked by lifetime distance"
         >
-          <HorizontalBars data={equipment.map((e) => ({ label: e.model, value: e.miles }))} height={220} />
+          <HorizontalBars data={equipment.map((e) => ({ label: e.model, value: e.km }))} height={220} />
         </ChartCard>
       </div>
 
       <div className="grid gap-12 md:grid-cols-2 mb-16">
         <ChartCard
           title="TEMPERATURE"
-          caption="i prefer running in the 40s, but unfortunately don't control the weather"
+          caption="count of runs bucketed by ambient temperature"
         >
           <BarChart
             data={temperatureBuckets.map((b) => ({
@@ -147,7 +146,7 @@ export function Statistics() {
           </div>
         </ChartCard>
 
-        <ChartCard title="WEATHER CONDITIONS" caption="rain or shine!">
+        <ChartCard title="WEATHER CONDITIONS" caption="count of runs by weather condition">
           <div className="flex items-end justify-around gap-3 w-full max-w-md">
             {weatherConditions.map((w) => {
               const Icon = WEATHER_ICONS[w.icon] ?? Cloud;

@@ -1,23 +1,42 @@
 #!/usr/bin/env node
-// Preprocess GPX files under public/gpx into a compact TypeScript module
-// at src/lib/gpx-processed.ts. Downsamples to ~500 points per track and
-// computes aggregate stats (distance, duration, elevation gain, pace, HR).
+// Preprocess GPX files under public/gpx into:
+//   1. src/lib/gpx-processed.ts  — SUMMARIES only (stats + metadata, no points)
+//   2. public/tracks/<id>.json   — full per-track payload (points, bbox), lazy-loaded by the UI
+//
+// Splitting the heavy point data out of the TS bundle keeps the dev/build
+// toolchain happy (V8 OOMs on the 28MB mega-file we used to ship) and lets
+// the client fetch only the tracks it actually renders.
+//
+// Everything remains metric-only and moving-time aware:
+//   - distance in km, elevation in m, pace in sec/km
+//   - moving-time rule: adjacent trkpts count as "moving" iff
+//     dt ≤ MAX_SAMPLE_GAP_SEC AND avg speed ≥ MIN_MOVING_MPS.
 //
 // Usage: node scripts/process-gpx.mjs
 
-import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  readdirSync,
+  readFileSync,
+  writeFileSync,
+  mkdirSync,
+  existsSync,
+  rmSync,
+} from "node:fs";
 import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const GPX_DIR = join(ROOT, "public", "gpx");
-const OUT = join(ROOT, "src", "lib", "gpx-processed.ts");
+const TRACKS_DIR = join(ROOT, "public", "tracks");
+const OUT_TS = join(ROOT, "src", "lib", "gpx-processed.ts");
 
 const TARGET_POINTS = 500;
+const MAX_SAMPLE_GAP_SEC = 15;
+const MIN_MOVING_MPS = 0.4;
 
-function haversineMi(a, b) {
-  const R = 3958.7613; // miles
+function haversineKm(a, b) {
+  const R = 6371.0088;
   const toRad = (deg) => (deg * Math.PI) / 180;
   const dLat = toRad(b.lat - a.lat);
   const dLon = toRad(b.lon - a.lon);
@@ -28,7 +47,6 @@ function haversineMi(a, b) {
 }
 
 function parseTrkpts(xml) {
-  // Robust enough for Strava-exported GPX 1.1.
   const pts = [];
   const re = /<trkpt\s+lat="([^"]+)"\s+lon="([^"]+)">([\s\S]*?)<\/trkpt>/g;
   let m;
@@ -58,39 +76,46 @@ function downsample(points, target) {
   const step = points.length / target;
   const out = [];
   for (let i = 0; i < target; i++) out.push(points[Math.floor(i * step)]);
-  out.push(points[points.length - 1]); // keep endpoint
+  out.push(points[points.length - 1]);
   return out;
 }
 
 function aggregate(points, gpxName) {
-  let totalMi = 0;
-  let cumMiAt = [0];
-  for (let i = 1; i < points.length; i++) {
-    totalMi += haversineMi(points[i - 1], points[i]);
-    cumMiAt.push(totalMi);
-  }
-  const t0 = points[0].time ? Date.parse(points[0].time) : null;
-  const t1 = points[points.length - 1].time ? Date.parse(points[points.length - 1].time) : null;
-  const durationSec = t0 && t1 ? Math.round((t1 - t0) / 1000) : null;
-
-  // Elevation gain = sum of positive deltas (meters; convert to feet)
+  let totalKm = 0;
+  let movingSec = 0;
   let gainM = 0;
+
   for (let i = 1; i < points.length; i++) {
-    if (points[i].ele != null && points[i - 1].ele != null) {
-      const d = points[i].ele - points[i - 1].ele;
-      if (d > 0) gainM += d;
+    const a = points[i - 1];
+    const b = points[i];
+    const segKm = haversineKm(a, b);
+    totalKm += segKm;
+
+    if (a.time && b.time) {
+      const dt = (Date.parse(b.time) - Date.parse(a.time)) / 1000;
+      if (dt > 0 && dt <= MAX_SAMPLE_GAP_SEC) {
+        const mps = (segKm * 1000) / dt;
+        if (mps >= MIN_MOVING_MPS) movingSec += dt;
+      }
+    }
+
+    if (b.ele != null && a.ele != null) {
+      const dEle = b.ele - a.ele;
+      if (dEle > 0) gainM += dEle;
     }
   }
-  const elevationFt = Math.round(gainM * 3.28084);
 
-  // Avg HR
+  const t0 = points[0].time ? Date.parse(points[0].time) : null;
+  const t1 = points[points.length - 1].time ? Date.parse(points[points.length - 1].time) : null;
+  const elapsedSec = t0 && t1 ? Math.round((t1 - t0) / 1000) : null;
+
   const hrs = points.map((p) => p.hr).filter((v) => typeof v === "number");
   const avgHr = hrs.length ? Math.round(hrs.reduce((a, b) => a + b, 0) / hrs.length) : null;
 
-  const paceSecPerMi =
-    durationSec && totalMi > 0.1 ? Math.round(durationSec / totalMi) : null;
+  const movingSecRounded = Math.round(movingSec);
+  const paceSecPerKm =
+    movingSecRounded > 0 && totalKm > 0.1 ? Math.round(movingSecRounded / totalKm) : null;
 
-  // Bounding box
   const lats = points.map((p) => p.lat);
   const lons = points.map((p) => p.lon);
   const bbox = {
@@ -102,15 +127,15 @@ function aggregate(points, gpxName) {
 
   return {
     name: gpxName,
-    distanceMi: +totalMi.toFixed(3),
-    durationSec,
-    paceSecPerMi,
-    elevationFt,
+    distanceKm: +totalKm.toFixed(3),
+    movingSec: movingSecRounded,
+    elapsedSec,
+    paceSecPerKm,
+    elevationM: Math.round(gainM),
     avgHr,
     startTime: points[0]?.time ?? null,
     endTime: points[points.length - 1]?.time ?? null,
     bbox,
-    cumMiAt,
   };
 }
 
@@ -119,25 +144,74 @@ function processFile(path, id) {
   const name = matchStr(xml, /<trk>\s*<name>([^<]+)<\/name>/) ?? id;
   const all = parseTrkpts(xml);
   if (!all.length) throw new Error(`No trkpt in ${path}`);
-  const aggAll = aggregate(all, name);
+  const stats = aggregate(all, name);
   const sampled = downsample(all, TARGET_POINTS);
-  // Recompute cumulative miles for sampled array so index aligns with sampled points
-  const cumMi = [0];
+  const cumKm = [0];
   for (let i = 1; i < sampled.length; i++) {
-    cumMi.push(cumMi[i - 1] + haversineMi(sampled[i - 1], sampled[i]));
+    cumKm.push(cumKm[i - 1] + haversineKm(sampled[i - 1], sampled[i]));
   }
-  return {
-    id,
-    name: aggAll.name,
-    stats: aggAll,
-    points: sampled.map((p, i) => ({
-      lat: +p.lat.toFixed(6),
-      lon: +p.lon.toFixed(6),
-      ele: p.ele != null ? +p.ele.toFixed(1) : null,
-      hr: p.hr ?? null,
-      mi: +cumMi[i].toFixed(3),
-    })),
-  };
+  const points = sampled.map((p, i) => ({
+    lat: +p.lat.toFixed(6),
+    lon: +p.lon.toFixed(6),
+    ele: p.ele != null ? +p.ele.toFixed(1) : null,
+    hr: p.hr ?? null,
+    km: +cumKm[i].toFixed(3),
+  }));
+  return { id, name, stats, rawPointCount: all.length, points };
+}
+
+// Cross-source dedup. See commentary below.
+const DEDUP_WINDOW_SEC = 120;
+const DEDUP_DIST_TOL = 0.5;
+
+function isStravaId(id) {
+  return /-\d{8,}$/.test(id);
+}
+
+function dedupe(tracks) {
+  const byTime = tracks.map((t) => ({
+    ts: t.stats.startTime ? Date.parse(t.stats.startTime) / 1000 : null,
+    track: t,
+  }));
+  byTime.sort((a, b) => (a.ts ?? 0) - (b.ts ?? 0));
+
+  const clusters = [];
+  for (const entry of byTime) {
+    const last = clusters[clusters.length - 1];
+    if (
+      last &&
+      entry.ts != null &&
+      last[0].ts != null &&
+      Math.abs(entry.ts - last[0].ts) <= DEDUP_WINDOW_SEC &&
+      Math.abs(entry.track.stats.distanceKm - last[0].track.stats.distanceKm) <= DEDUP_DIST_TOL
+    ) {
+      last.push(entry);
+    } else {
+      clusters.push([entry]);
+    }
+  }
+
+  const kept = [];
+  const dropped = [];
+  for (const cluster of clusters) {
+    if (cluster.length === 1) {
+      kept.push(cluster[0].track);
+      continue;
+    }
+    const ranked = cluster.slice().sort((a, b) => {
+      const sa = isStravaId(a.track.id) ? 0 : 1;
+      const sb = isStravaId(b.track.id) ? 0 : 1;
+      if (sa !== sb) return sa - sb;
+      const pa = a.track.rawPointCount ?? 0;
+      const pb = b.track.rawPointCount ?? 0;
+      if (pa !== pb) return pb - pa;
+      return a.track.id < b.track.id ? -1 : 1;
+    });
+    kept.push(ranked[0].track);
+    for (const r of ranked.slice(1))
+      dropped.push({ kept: ranked[0].track.id, dropped: r.track.id });
+  }
+  return { kept, dropped };
 }
 
 function main() {
@@ -146,57 +220,93 @@ function main() {
     console.error("No .gpx files found in public/gpx/");
     process.exit(1);
   }
-  const tracks = files.map((f) => {
+
+  // Rebuild tracks dir from scratch so stale entries don't linger.
+  if (existsSync(TRACKS_DIR)) rmSync(TRACKS_DIR, { recursive: true, force: true });
+  mkdirSync(TRACKS_DIR, { recursive: true });
+
+  const allTracks = files.map((f) => {
     const id = f.replace(/\.gpx$/i, "");
     console.log(`Processing ${f}...`);
     return processFile(join(GPX_DIR, f), id);
   });
+  const { kept: tracks, dropped } = dedupe(allTracks);
+  if (dropped.length) {
+    console.log(`\nDeduped ${dropped.length} duplicate track(s):`);
+    for (const d of dropped) console.log(`  ${d.dropped} → matches ${d.kept} (skipped)`);
+    console.log("");
+  }
 
+  // Write per-track JSON payloads (full-resolution sampled points + bbox).
+  for (const t of tracks) {
+    const payload = {
+      id: t.id,
+      name: t.name,
+      stats: t.stats,
+      points: t.points,
+    };
+    writeFileSync(join(TRACKS_DIR, `${t.id}.json`), JSON.stringify(payload));
+  }
+
+  // Write the summary TS module — lightweight enough to bundle.
+  const summaries = Object.fromEntries(
+    tracks.map((t) => [t.id, { id: t.id, name: t.name, stats: t.stats }]),
+  );
   const header = `// AUTO-GENERATED by scripts/process-gpx.mjs — do not edit.
-// Run: node scripts/process-gpx.mjs
+// Metric-only. Duration uses MOVING time (stops excluded).
+//
+// Full per-track point data lives at /tracks/<id>.json and is loaded
+// lazily by the client (see use-gpx-track.ts). This module ships ONLY
+// the summary stats so the TS bundle stays small.
 
 export interface GpxPoint {
   lat: number;
   lon: number;
   ele: number | null;
   hr: number | null;
-  mi: number; // cumulative miles from start
+  km: number;
 }
 
 export interface GpxStats {
   name: string;
-  distanceMi: number;
-  durationSec: number | null;
-  paceSecPerMi: number | null;
-  elevationFt: number;
+  distanceKm: number;
+  movingSec: number;
+  elapsedSec: number | null;
+  paceSecPerKm: number | null;
+  elevationM: number;
   avgHr: number | null;
   startTime: string | null;
   endTime: string | null;
   bbox: { minLat: number; maxLat: number; minLon: number; maxLon: number };
-  cumMiAt: number[];
 }
 
-export interface GpxTrack {
+export interface GpxSummary {
   id: string;
   name: string;
   stats: GpxStats;
+}
+
+export interface GpxTrack extends GpxSummary {
   points: GpxPoint[];
 }
 
-export const gpxTracks: Record<string, GpxTrack> = ${JSON.stringify(
-    Object.fromEntries(tracks.map((t) => [t.id, t])),
+export const gpxSummaries: Record<string, GpxSummary> = ${JSON.stringify(
+    summaries,
     null,
     2,
   )};
 `;
 
-  writeFileSync(OUT, header);
-  console.log(`Wrote ${OUT} (${tracks.length} tracks)`);
+  writeFileSync(OUT_TS, header);
+  console.log(
+    `Wrote ${OUT_TS} (${tracks.length} summaries) and ${tracks.length} files in public/tracks/`,
+  );
   for (const t of tracks) {
+    const pace = t.stats.paceSecPerKm
+      ? `${Math.floor(t.stats.paceSecPerKm / 60)}:${String(t.stats.paceSecPerKm % 60).padStart(2, "0")}/km`
+      : "?";
     console.log(
-      `  ${t.id}: ${t.points.length} points, ${t.stats.distanceMi.toFixed(2)} mi, ${
-        t.stats.durationSec ? Math.round(t.stats.durationSec / 60) + "min" : "?"
-      }, +${t.stats.elevationFt}ft`,
+      `  ${t.id}: ${t.stats.distanceKm.toFixed(2)} km, moving ${Math.round(t.stats.movingSec / 60)}min, +${t.stats.elevationM}m, ${pace}`,
     );
   }
 }
