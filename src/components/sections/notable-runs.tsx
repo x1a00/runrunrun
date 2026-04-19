@@ -196,9 +196,12 @@ function Panel({ rows, category }: PanelProps) {
       aria-labelledby={`tab-${category}`}
       className="grid gap-8 md:grid-cols-2 lg:grid-cols-4"
     >
+      <div className="lg:col-span-1 relative">
+        {/* Gradient fade hint that list continues below */}
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-neutral-950 to-transparent z-10 md:hidden" />
       <div
         onScroll={onScroll}
-        className="lg:col-span-1 max-h-[400px] overflow-y-auto pr-1 scroll-thin"
+        className="max-h-[40vh] md:max-h-[400px] overflow-y-auto overscroll-y-contain pr-1 scroll-thin"
       >
         <DataTable
           rows={rows}
@@ -220,6 +223,7 @@ function Panel({ rows, category }: PanelProps) {
             scroll for more ({preloadCount}/{rows.length} loaded)
           </div>
         ) : null}
+      </div>
       </div>
       <MapPanel run={selected} />
       <ElevationPanel run={selected} />

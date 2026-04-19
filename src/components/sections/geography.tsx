@@ -18,6 +18,13 @@ function codeToFlag(code?: string) {
   );
 }
 
+// State codes → local flag image. Uses regional/cultural flags where more
+// meaningful than the state seal (Cascadia for WA, Bear Flag for CA).
+const STATE_FLAG_IMG: Record<string, string> = {
+  WA: "/runrunrun/images/flag-wa-cascadia.png",
+  CA: "/runrunrun/images/flag-ca.png",
+};
+
 type Kind = "country" | "state" | "city";
 type UnifiedRow = GeoRow & { level: 0 | 1 | 2; kind: Kind };
 
@@ -63,6 +70,10 @@ export function Geography() {
         >
           {r.level === 0 ? (
             <span aria-hidden className="text-base leading-none">{codeToFlag(r.code)}</span>
+          ) : r.level === 1 && r.code && STATE_FLAG_IMG[r.code] ? (
+            // State with a flag image (Cascadia/WA, Bear Flag/CA, …)
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={STATE_FLAG_IMG[r.code]} alt={r.name} className="h-3.5 w-auto opacity-80 inline-block" />
           ) : (
             <span aria-hidden className="text-neutral-600">└</span>
           )}
