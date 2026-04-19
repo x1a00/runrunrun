@@ -18,55 +18,77 @@ function codeToFlag(code?: string) {
   );
 }
 
-const countryCols = [
-  {
-    key: "name",
-    header: "COUNTRY",
-    cell: (r: GeoRow) => (
-      <span className="inline-flex items-center gap-2">
-        <span aria-hidden className="text-base leading-none">{codeToFlag(r.code)}</span>
-        <span>{r.name}</span>
-      </span>
-    ),
-  },
-  { key: "days", header: "DAYS", align: "right" as const, cell: (r: GeoRow) => formatNumber(r.days) },
-  { key: "km", header: "↓KM", align: "right" as const, cell: (r: GeoRow) => formatNumber(r.km, 1) },
-];
-const stateCols = [
-  { key: "name", header: "STATE", cell: (r: GeoRow) => r.name },
-  countryCols[1],
-  countryCols[2],
-];
+type Kind = "country" | "state" | "city";
+type UnifiedRow = GeoRow & { level: 0 | 1 | 2; kind: Kind };
 
-const boroughCols = [
-  { key: "name", header: "BOROUGH", cell: (r: GeoRow) => r.name },
-  countryCols[1],
-  countryCols[2],
-];
+function buildRows(): UnifiedRow[] {
+  const out: UnifiedRow[] = [];
+  for (const c of countriesVisited) {
+    out.push({ ...c, level: 0, kind: "country" });
+    if (c.code === "US") {
+      for (const s of usStatesVisited) {
+        out.push({ ...s, level: 1, kind: "state" });
+        if (s.code === "NY") {
+          for (const b of nycBoroughsVisited) {
+            out.push({ ...b, level: 2, kind: "city" });
+          }
+        }
+      }
+    }
+  }
+  return out;
+}
 
 export function Geography() {
   const filter = useGeoFilter();
-  const half = Math.ceil(usStatesVisited.length / 2);
-  const left = usStatesVisited.slice(0, half);
-  const right = usStatesVisited.slice(half);
-  const hasCountries = countriesVisited.length > 0;
-  const hasStates = usStatesVisited.length > 0;
-  const hasBoroughs = nycBoroughsVisited.length > 0;
+  const rows = buildRows();
   const hasUnknown = countriesVisited.some((r) => r.code === "??");
-  if (!hasCountries && !hasStates && !hasBoroughs) return null;
+  if (rows.length === 0) return null;
 
-  const activeCountryIdx = (rows: GeoRow[]) =>
-    filter.kind === "country"
-      ? rows.findIndex((r) => r.code === filter.code)
-      : -1;
-  const activeStateIdx = (rows: GeoRow[]) =>
-    filter.kind === "state"
-      ? rows.findIndex((r) => r.code === filter.code)
-      : -1;
-  const activeCityIdx = (rows: GeoRow[]) =>
-    filter.kind === "city"
-      ? rows.findIndex((r) => r.code === filter.code)
-      : -1;
+  const activeIdx = rows.findIndex((r) => {
+    if (filter.kind === "country" && r.kind === "country") return r.code === filter.code;
+    if (filter.kind === "state" && r.kind === "state") return r.code === filter.code;
+    if (filter.kind === "city" && r.kind === "city") return r.code === filter.code;
+    return false;
+  });
+
+  const columns = [
+    {
+      key: "name",
+      header: "COUNTRY",
+      cell: (r: UnifiedRow) => (
+        <span
+          className="inline-flex items-center gap-2"
+          style={{ paddingLeft: r.level * 20 }}
+        >
+          {r.level === 0 ? (
+            <span aria-hidden className="text-base leading-none">{codeToFlag(r.code)}</span>
+          ) : (
+            <span aria-hidden className="text-neutral-600">└</span>
+          )}
+          <span className={r.level === 0 ? "" : "text-neutral-400"}>{r.name}</span>
+        </span>
+      ),
+    },
+    {
+      key: "days",
+      header: "DAYS",
+      align: "right" as const,
+      cell: (r: UnifiedRow) => formatNumber(r.days),
+    },
+    {
+      key: "km",
+      header: "↓KM",
+      align: "right" as const,
+      cell: (r: UnifiedRow) => formatNumber(r.km, 1),
+    },
+  ];
+
+  const onRowClick = (row: UnifiedRow) => {
+    if (row.kind === "country") toggleCountry(row.code ?? "??", row.name);
+    else if (row.kind === "state") toggleState(row.code ?? "", row.name);
+    else toggleCity(row.code ?? "", row.name);
+  };
 
   return (
     <section>
@@ -74,74 +96,34 @@ export function Geography() {
         GEOGRAPHY
       </h2>
       <p className="text-center text-xs italic text-neutral-500 font-mono-tamzen mb-8">
-        click any row to filter Notable Runs by that country or state
+        click any row to filter Notable Runs by that country, state, or borough
       </p>
 
-      {hasCountries ? (
-        <div className="mb-8">
-          <h3 className="text-center font-sans text-lg font-bold text-neutral-100 mb-1">
-            COUNTRIES VISITED
-          </h3>
-          <div className="mx-auto max-w-3xl">
-            <DataTable
-              rows={countriesVisited}
-              columns={countryCols}
-              highlightedIndex={activeCountryIdx(countriesVisited)}
-              onRowClick={(row) => toggleCountry(row.code ?? "??", row.name)}
-            />
-          </div>
-          {hasUnknown ? (
-            <p className="mx-auto max-w-3xl mt-3 text-xs font-mono-tamzen text-neutral-500 leading-relaxed">
-              <span className="text-neutral-400">Unknown</span> &mdash; these are
-              runs whose GPS center didn&rsquo;t fall inside any of the
-              bounding-box regions this site knows about. Geolocation here is
-              purely offline (coarse lat/lon boxes, no reverse-geocoding API), so
-              anywhere outside the pre-configured countries lands in
-              &ldquo;Unknown.&rdquo; Add the region to{" "}
-              <code>src/lib/gpx-stats.ts</code> (search for <code>REGIONS</code>)
-              to promote it.
-            </p>
-          ) : null}
+      <div className="mb-8">
+        <h3 className="text-center font-sans text-lg font-bold text-neutral-100 mb-1">
+          COUNTRIES VISITED
+        </h3>
+        <div className="mx-auto max-w-3xl">
+          <DataTable
+            rows={rows}
+            columns={columns}
+            highlightedIndex={activeIdx}
+            onRowClick={onRowClick}
+          />
         </div>
-      ) : null}
-
-      {hasStates ? (
-        <div className="mb-8">
-          <h3 className="text-center font-sans text-lg font-bold text-neutral-100 mb-1">
-            US STATES VISITED
-          </h3>
-          <div className="mx-auto grid max-w-3xl gap-8 md:grid-cols-2">
-            <DataTable
-              rows={left}
-              columns={stateCols}
-              highlightedIndex={activeStateIdx(left)}
-              onRowClick={(row) => toggleState(row.code ?? "", row.name)}
-            />
-            <DataTable
-              rows={right}
-              columns={stateCols}
-              highlightedIndex={activeStateIdx(right)}
-              onRowClick={(row) => toggleState(row.code ?? "", row.name)}
-            />
-          </div>
-        </div>
-      ) : null}
-
-      {hasBoroughs ? (
-        <div className="mb-16">
-          <h3 className="text-center font-sans text-lg font-bold text-neutral-100 mb-1">
-            NYC BOROUGHS VISITED
-          </h3>
-          <div className="mx-auto max-w-3xl">
-            <DataTable
-              rows={nycBoroughsVisited}
-              columns={boroughCols}
-              highlightedIndex={activeCityIdx(nycBoroughsVisited)}
-              onRowClick={(row) => toggleCity(row.code ?? "", row.name)}
-            />
-          </div>
-        </div>
-      ) : null}
+        {hasUnknown ? (
+          <p className="mx-auto max-w-3xl mt-3 text-xs font-mono-tamzen text-neutral-500 leading-relaxed">
+            <span className="text-neutral-400">Unknown</span> &mdash; these are
+            runs whose GPS center didn&rsquo;t fall inside any of the
+            bounding-box regions this site knows about. Geolocation here is
+            purely offline (coarse lat/lon boxes, no reverse-geocoding API), so
+            anywhere outside the pre-configured countries lands in
+            &ldquo;Unknown.&rdquo; Add the region to{" "}
+            <code>src/lib/gpx-stats.ts</code> (search for <code>REGIONS</code>)
+            to promote it.
+          </p>
+        ) : null}
+      </div>
     </section>
   );
 }
