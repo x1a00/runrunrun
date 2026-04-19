@@ -193,13 +193,16 @@ function rankBy<T>(arr: T[], by: (x: T) => number): T[] {
   return arr.slice().sort((a, b) => by(b) - by(a));
 }
 
-const byDistance = rankBy(tracks, (t) => t.stats.distanceKm).map((t, i) =>
-  toNotableRun(t, i + 1, "clear"),
-);
+// Benchmark shows top 10 per tab — cap our lists to match.
+const NOTABLE_LIMIT = 10;
 
-const byElevation = rankBy(tracks, (t) => t.stats.elevationM).map((t, i) =>
-  toNotableRun(t, i + 1, "clear"),
-);
+const byDistance = rankBy(tracks, (t) => t.stats.distanceKm)
+  .slice(0, NOTABLE_LIMIT)
+  .map((t, i) => toNotableRun(t, i + 1, "clear"));
+
+const byElevation = rankBy(tracks, (t) => t.stats.elevationM)
+  .slice(0, NOTABLE_LIMIT)
+  .map((t, i) => toNotableRun(t, i + 1, "clear"));
 
 // Personal bests: for each distance bucket, pick the fastest run that
 // reached at least that distance.

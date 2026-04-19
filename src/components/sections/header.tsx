@@ -17,7 +17,7 @@ export function Header() {
         RUN RUN RUN
       </h1>
       <p className="mt-2 text-sm font-mono-tamzen text-neutral-400">
-        running everyday from {start} to {end}
+        long runs logged from {start} to {end}
       </p>
     </div>
   );
