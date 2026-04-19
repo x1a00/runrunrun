@@ -72,11 +72,18 @@ interface Region {
 const REGIONS: Region[] = [
   // NYC boroughs — specific boxes before wider city/state fallback so a
   // run in Astoria reports "Queens" instead of just "NY".
-  { countryCode: "US", country: "United States", region: "NY", city: "Manhattan",     bbox: { minLat: 40.70, maxLat: 40.88, minLon: -74.02, maxLon: -73.90 } },
+  // Outer boroughs are listed BEFORE Manhattan so that runs whose start point
+  // falls in an overlapping zone (e.g. Brooklyn Bridge Park, LIC waterfront)
+  // resolve to the outer borough. Manhattan's eastern edge is tightened to
+  // -73.93 so the East River's east bank (LIC, Greenpoint, Williamsburg,
+  // DUMBO) doesn't leak into Manhattan. Trade-off: a sliver of east Harlem
+  // and Inwood north of ~125th is excluded but those runs fall back to
+  // "NY" rather than being misclassified.
   { countryCode: "US", country: "United States", region: "NY", city: "Brooklyn",      bbox: { minLat: 40.55, maxLat: 40.74, minLon: -74.05, maxLon: -73.83 } },
   { countryCode: "US", country: "United States", region: "NY", city: "Queens",        bbox: { minLat: 40.54, maxLat: 40.80, minLon: -73.96, maxLon: -73.70 } },
-  { countryCode: "US", country: "United States", region: "NY", city: "Bronx",         bbox: { minLat: 40.78, maxLat: 40.92, minLon: -73.93, maxLon: -73.76 } },
+  { countryCode: "US", country: "United States", region: "NY", city: "Bronx",         bbox: { minLat: 40.80, maxLat: 40.92, minLon: -73.93, maxLon: -73.76 } },
   { countryCode: "US", country: "United States", region: "NY", city: "Staten Island", bbox: { minLat: 40.48, maxLat: 40.65, minLon: -74.27, maxLon: -74.05 } },
+  { countryCode: "US", country: "United States", region: "NY", city: "Manhattan",     bbox: { minLat: 40.70, maxLat: 40.88, minLon: -74.02, maxLon: -73.93 } },
   // NY-state fallback for upstate / Long Island runs outside the five boroughs.
   { countryCode: "US", country: "United States", region: "NY",                        bbox: { minLat: 40.48, maxLat: 45.02, minLon: -79.76, maxLon: -71.85 } },
   { countryCode: "US", country: "United States", region: "CA", city: "San Diego",     bbox: { minLat: 32.60, maxLat: 33.15, minLon: -117.40, maxLon: -116.85 } },
@@ -129,9 +136,14 @@ const REGIONS: Region[] = [
 ];
 
 function locationFor(t: GpxSummary): ActivityLocation {
+  // Prefer the track's first GPS point (where the run actually started) over
+  // the bbox centroid. Bridge/waterfront runs routinely have centroids that
+  // drift into the wrong borough (e.g. a LIC→Manhattan→LIC loop has its
+  // centroid in the East River). The start point is where you stood when you
+  // hit "go" and is the most honest answer to "which borough is this run?".
   const { minLat, maxLat, minLon, maxLon } = t.stats.bbox;
-  const lat = (minLat + maxLat) / 2;
-  const lon = (minLon + maxLon) / 2;
+  const lat = t.stats.startLat ?? (minLat + maxLat) / 2;
+  const lon = t.stats.startLon ?? (minLon + maxLon) / 2;
   for (const r of REGIONS) {
     if (
       lat >= r.bbox.minLat && lat <= r.bbox.maxLat &&

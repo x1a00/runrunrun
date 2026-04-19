@@ -135,6 +135,8 @@ function aggregate(points, gpxName) {
     avgHr,
     startTime: points[0]?.time ?? null,
     endTime: points[points.length - 1]?.time ?? null,
+    startLat: +points[0].lat.toFixed(6),
+    startLon: +points[0].lon.toFixed(6),
     bbox,
   };
 }
@@ -277,6 +279,8 @@ export interface GpxStats {
   avgHr: number | null;
   startTime: string | null;
   endTime: string | null;
+  startLat?: number;
+  startLon?: number;
   bbox: { minLat: number; maxLat: number; minLon: number; maxLon: number };
 }
 

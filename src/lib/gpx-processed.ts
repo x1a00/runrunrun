@@ -23,6 +23,8 @@ export interface GpxStats {
   avgHr: number | null;
   startTime: string | null;
   endTime: string | null;
+  startLat?: number;
+  startLon?: number;
   bbox: { minLat: number; maxLat: number; minLon: number; maxLon: number };
 }
 
@@ -50,6 +52,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": null,
       "startTime": "2024-10-22T20:21:33.000Z",
       "endTime": "2024-10-22T20:40:05.000Z",
+      "startLat": 40.76227,
+      "startLon": -74.020112,
       "bbox": {
         "minLat": 40.76227,
         "maxLat": 40.774051,
@@ -71,6 +75,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 154,
       "startTime": "2025-01-09T21:16:06.000Z",
       "endTime": "2025-01-09T21:32:22.000Z",
+      "startLat": 40.760808,
+      "startLon": -74.020473,
       "bbox": {
         "minLat": 40.760802,
         "maxLat": 40.765518,
@@ -92,6 +98,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 159,
       "startTime": "2025-01-11T17:52:23.000Z",
       "endTime": "2025-01-11T18:26:27.000Z",
+      "startLat": 40.760527,
+      "startLon": -74.020803,
       "bbox": {
         "minLat": 40.729037,
         "maxLat": 40.760845,
@@ -113,6 +121,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": null,
       "startTime": "2025-01-12T20:07:56.000Z",
       "endTime": "2025-01-12T21:09:52.000Z",
+      "startLat": 40.759064,
+      "startLon": -73.953843,
       "bbox": {
         "minLat": 40.749724,
         "maxLat": 40.772935,
@@ -134,6 +144,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 157,
       "startTime": "2025-01-14T21:41:36.000Z",
       "endTime": "2025-01-14T22:10:13.000Z",
+      "startLat": 40.760925,
+      "startLon": -74.021145,
       "bbox": {
         "minLat": 40.760925,
         "maxLat": 40.765554,
@@ -155,6 +167,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 150,
       "startTime": "2025-01-23T18:01:28.000Z",
       "endTime": "2025-01-23T18:34:34.000Z",
+      "startLat": 40.760345,
+      "startLon": -74.019931,
       "bbox": {
         "minLat": 40.760345,
         "maxLat": 40.776356,
@@ -176,6 +190,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 158,
       "startTime": "2025-01-24T17:39:31.000Z",
       "endTime": "2025-01-24T18:18:23.000Z",
+      "startLat": 40.76085,
+      "startLon": -74.020747,
       "bbox": {
         "minLat": 40.742566,
         "maxLat": 40.761032,
@@ -197,6 +213,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 148,
       "startTime": "2025-01-25T19:28:42.000Z",
       "endTime": "2025-01-25T21:11:08.000Z",
+      "startLat": 40.760512,
+      "startLon": -74.019802,
       "bbox": {
         "minLat": 40.760512,
         "maxLat": 40.804412,
@@ -218,6 +236,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 149,
       "startTime": "2025-01-27T04:44:30.000Z",
       "endTime": "2025-01-27T05:00:51.000Z",
+      "startLat": 40.758558,
+      "startLon": -74.022675,
       "bbox": {
         "minLat": 40.756053,
         "maxLat": 40.758558,
@@ -239,6 +259,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 142,
       "startTime": "2025-01-28T14:10:38.000Z",
       "endTime": "2025-01-28T14:43:29.000Z",
+      "startLat": 40.762106,
+      "startLon": -74.020283,
       "bbox": {
         "minLat": 40.760499,
         "maxLat": 40.76555,
@@ -260,6 +282,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 161,
       "startTime": "2025-01-29T13:52:03.000Z",
       "endTime": "2025-01-29T14:21:50.000Z",
+      "startLat": 40.761364,
+      "startLon": -74.020914,
       "bbox": {
         "minLat": 40.761164,
         "maxLat": 40.765553,
@@ -281,6 +305,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 141,
       "startTime": "2025-01-30T22:15:24.000Z",
       "endTime": "2025-01-30T22:52:57.000Z",
+      "startLat": 40.766127,
+      "startLon": -73.97602,
       "bbox": {
         "minLat": 40.766127,
         "maxLat": 40.794448,
@@ -302,6 +328,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 164,
       "startTime": "2025-02-01T19:21:20.000Z",
       "endTime": "2025-02-01T21:42:49.000Z",
+      "startLat": 40.760665,
+      "startLon": -74.020027,
       "bbox": {
         "minLat": 40.705985,
         "maxLat": 40.761011,
@@ -323,6 +351,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 154,
       "startTime": "2025-02-05T04:30:06.000Z",
       "endTime": "2025-02-05T04:56:53.000Z",
+      "startLat": 40.762011,
+      "startLon": -74.02041,
       "bbox": {
         "minLat": 40.762011,
         "maxLat": 40.765544,
@@ -344,6 +374,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 151,
       "startTime": "2025-02-05T23:41:58.000Z",
       "endTime": "2025-02-06T00:06:59.000Z",
+      "startLat": 40.761869,
+      "startLon": -74.020504,
       "bbox": {
         "minLat": 40.761869,
         "maxLat": 40.765552,
@@ -365,6 +397,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 158,
       "startTime": "2025-02-07T17:33:57.000Z",
       "endTime": "2025-02-07T18:04:50.000Z",
+      "startLat": 40.76043,
+      "startLon": -74.021301,
       "bbox": {
         "minLat": 40.76043,
         "maxLat": 40.77728,
@@ -386,6 +420,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 150,
       "startTime": "2025-02-08T19:10:19.000Z",
       "endTime": "2025-02-08T22:39:39.000Z",
+      "startLat": 40.760208,
+      "startLon": -74.003321,
       "bbox": {
         "minLat": 40.760208,
         "maxLat": 40.854987,
@@ -407,6 +443,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 152,
       "startTime": "2025-02-13T21:08:40.000Z",
       "endTime": "2025-02-13T21:36:49.000Z",
+      "startLat": 40.760447,
+      "startLon": -74.019729,
       "bbox": {
         "minLat": 40.74859,
         "maxLat": 40.762528,
@@ -428,6 +466,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 167,
       "startTime": "2025-02-15T18:48:22.000Z",
       "endTime": "2025-02-15T19:11:53.000Z",
+      "startLat": 40.761072,
+      "startLon": -74.020933,
       "bbox": {
         "minLat": 40.761072,
         "maxLat": 40.76554,
@@ -449,6 +489,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 149,
       "startTime": "2025-02-17T18:43:21.000Z",
       "endTime": "2025-02-17T19:11:31.000Z",
+      "startLat": 40.761052,
+      "startLon": -74.020912,
       "bbox": {
         "minLat": 40.761007,
         "maxLat": 40.777039,
@@ -470,6 +512,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 153,
       "startTime": "2025-02-19T12:19:30.000Z",
       "endTime": "2025-02-19T13:17:05.000Z",
+      "startLat": 25.782177,
+      "startLon": -80.129657,
       "bbox": {
         "minLat": 25.781947,
         "maxLat": 25.805386,
@@ -491,6 +535,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 147,
       "startTime": "2025-02-20T21:28:07.000Z",
       "endTime": "2025-02-20T23:08:27.000Z",
+      "startLat": 25.782845,
+      "startLon": -80.131891,
       "bbox": {
         "minLat": 25.782737,
         "maxLat": 25.793891,
@@ -512,6 +558,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 156,
       "startTime": "2025-02-25T23:36:39.000Z",
       "endTime": "2025-02-26T00:34:07.000Z",
+      "startLat": 40.761628,
+      "startLon": -74.020973,
       "bbox": {
         "minLat": 40.761628,
         "maxLat": 40.765494,
@@ -533,6 +581,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 165,
       "startTime": "2025-02-27T19:48:54.000Z",
       "endTime": "2025-02-27T20:13:04.000Z",
+      "startLat": 40.760987,
+      "startLon": -74.021043,
       "bbox": {
         "minLat": 40.760987,
         "maxLat": 40.765562,
@@ -554,6 +604,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 154,
       "startTime": "2025-03-01T19:32:57.000Z",
       "endTime": "2025-03-01T20:56:03.000Z",
+      "startLat": 40.711953,
+      "startLon": -74.00424,
       "bbox": {
         "minLat": 40.652043,
         "maxLat": 40.711953,
@@ -575,6 +627,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 163,
       "startTime": "2025-03-04T22:13:00.000Z",
       "endTime": "2025-03-04T22:35:36.000Z",
+      "startLat": 40.764214,
+      "startLon": -74.018269,
       "bbox": {
         "minLat": 40.763962,
         "maxLat": 40.765511,
@@ -596,6 +650,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 139,
       "startTime": "2025-03-06T18:11:48.000Z",
       "endTime": "2025-03-06T18:49:56.000Z",
+      "startLat": 40.760671,
+      "startLon": -74.020169,
       "bbox": {
         "minLat": 40.747831,
         "maxLat": 40.761396,
@@ -617,6 +673,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 143,
       "startTime": "2025-03-09T18:40:56.000Z",
       "endTime": "2025-03-09T20:18:12.000Z",
+      "startLat": 40.714228,
+      "startLon": -74.050351,
       "bbox": {
         "minLat": 40.684873,
         "maxLat": 40.7169,
@@ -638,6 +696,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 165,
       "startTime": "2025-03-11T22:45:54.000Z",
       "endTime": "2025-03-11T23:31:59.000Z",
+      "startLat": 40.761547,
+      "startLon": -74.020802,
       "bbox": {
         "minLat": 40.761547,
         "maxLat": 40.765572,
@@ -659,6 +719,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 148,
       "startTime": "2025-03-13T22:56:42.000Z",
       "endTime": "2025-03-13T23:22:44.000Z",
+      "startLat": 40.761308,
+      "startLon": -74.021101,
       "bbox": {
         "minLat": 40.761308,
         "maxLat": 40.765543,
@@ -680,6 +742,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 131,
       "startTime": "2025-03-15T18:28:35.000Z",
       "endTime": "2025-03-15T20:43:53.000Z",
+      "startLat": 41.448061,
+      "startLon": -73.980443,
       "bbox": {
         "minLat": 41.418972,
         "maxLat": 41.455641,
@@ -701,6 +765,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 149,
       "startTime": "2025-03-18T22:42:56.000Z",
       "endTime": "2025-03-18T23:48:29.000Z",
+      "startLat": 40.765228,
+      "startLon": -74.018227,
       "bbox": {
         "minLat": 40.763954,
         "maxLat": 40.765513,
@@ -722,6 +788,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 168,
       "startTime": "2025-03-19T21:54:17.000Z",
       "endTime": "2025-03-19T22:44:51.000Z",
+      "startLat": 40.75775,
+      "startLon": -73.988917,
       "bbox": {
         "minLat": 40.716666,
         "maxLat": 40.762903,
@@ -743,6 +811,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 141,
       "startTime": "2025-03-23T14:02:25.000Z",
       "endTime": "2025-03-23T16:29:56.000Z",
+      "startLat": 29.960858,
+      "startLon": -90.070345,
       "bbox": {
         "minLat": 29.960858,
         "maxLat": 30.030105,
@@ -764,6 +834,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 146,
       "startTime": "2025-03-25T12:56:56.000Z",
       "endTime": "2025-03-25T13:24:32.000Z",
+      "startLat": 29.953508,
+      "startLon": -90.067327,
       "bbox": {
         "minLat": 29.952902,
         "maxLat": 29.963069,
@@ -785,6 +857,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 150,
       "startTime": "2025-03-29T03:27:50.000Z",
       "endTime": "2025-03-29T03:52:11.000Z",
+      "startLat": 40.763023,
+      "startLon": -74.0196,
       "bbox": {
         "minLat": 40.760704,
         "maxLat": 40.765533,
@@ -806,6 +880,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 156,
       "startTime": "2025-03-30T23:31:12.000Z",
       "endTime": "2025-03-30T23:56:29.000Z",
+      "startLat": 40.761767,
+      "startLon": -74.020621,
       "bbox": {
         "minLat": 40.761767,
         "maxLat": 40.765515,
@@ -827,6 +903,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 142,
       "startTime": "2025-04-03T22:11:15.000Z",
       "endTime": "2025-04-03T22:42:55.000Z",
+      "startLat": 40.761232,
+      "startLon": -74.020958,
       "bbox": {
         "minLat": 40.761232,
         "maxLat": 40.765502,
@@ -848,6 +926,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 145,
       "startTime": "2025-04-04T21:28:52.000Z",
       "endTime": "2025-04-04T22:04:35.000Z",
+      "startLat": 40.765971,
+      "startLon": -73.976068,
       "bbox": {
         "minLat": 40.765971,
         "maxLat": 40.779503,
@@ -869,6 +949,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 144,
       "startTime": "2025-04-06T16:58:36.000Z",
       "endTime": "2025-04-06T17:38:42.000Z",
+      "startLat": 40.763342,
+      "startLon": -74.019896,
       "bbox": {
         "minLat": 40.761989,
         "maxLat": 40.765515,
@@ -890,6 +972,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 154,
       "startTime": "2025-04-08T22:37:17.000Z",
       "endTime": "2025-04-08T23:24:45.000Z",
+      "startLat": 40.761589,
+      "startLon": -74.020939,
       "bbox": {
         "minLat": 40.761589,
         "maxLat": 40.765502,
@@ -911,6 +995,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 145,
       "startTime": "2025-04-10T17:42:05.000Z",
       "endTime": "2025-04-10T18:35:52.000Z",
+      "startLat": 40.761482,
+      "startLon": -74.020582,
       "bbox": {
         "minLat": 40.760332,
         "maxLat": 40.78426,
@@ -932,6 +1018,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 180,
       "startTime": "2025-04-13T11:14:58.000Z",
       "endTime": "2025-04-13T12:54:49.000Z",
+      "startLat": 40.728422,
+      "startLon": -74.034655,
       "bbox": {
         "minLat": 40.689021,
         "maxLat": 40.728422,
@@ -953,6 +1041,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 134,
       "startTime": "2025-04-16T11:36:36.000Z",
       "endTime": "2025-04-16T12:53:24.000Z",
+      "startLat": 32.789681,
+      "startLon": -79.948546,
       "bbox": {
         "minLat": 32.769469,
         "maxLat": 32.793675,
@@ -974,6 +1064,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 147,
       "startTime": "2025-04-18T01:21:42.000Z",
       "endTime": "2025-04-18T02:00:18.000Z",
+      "startLat": 32.059235,
+      "startLon": -81.104188,
       "bbox": {
         "minLat": 32.04687,
         "maxLat": 32.060492,
@@ -995,6 +1087,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 140,
       "startTime": "2025-04-19T12:27:38.000Z",
       "endTime": "2025-04-19T13:06:44.000Z",
+      "startLat": 37.54754,
+      "startLon": -77.456454,
       "bbox": {
         "minLat": 37.530441,
         "maxLat": 37.54754,
@@ -1016,6 +1110,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 151,
       "startTime": "2025-04-22T21:46:24.000Z",
       "endTime": "2025-04-22T23:35:29.000Z",
+      "startLat": 40.756914,
+      "startLon": -73.987575,
       "bbox": {
         "minLat": 40.713404,
         "maxLat": 40.76274,
@@ -1037,6 +1133,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 143,
       "startTime": "2025-04-25T00:54:25.000Z",
       "endTime": "2025-04-25T01:36:23.000Z",
+      "startLat": 40.764987,
+      "startLon": -74.018202,
       "bbox": {
         "minLat": 40.760951,
         "maxLat": 40.765482,
@@ -1058,6 +1156,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 140,
       "startTime": "2025-04-26T20:59:01.000Z",
       "endTime": "2025-04-26T23:10:54.000Z",
+      "startLat": 40.670923,
+      "startLon": -74.012911,
       "bbox": {
         "minLat": 40.574748,
         "maxLat": 40.672247,
@@ -1079,6 +1179,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 148,
       "startTime": "2025-04-29T21:50:35.000Z",
       "endTime": "2025-04-29T22:34:49.000Z",
+      "startLat": 40.75758,
+      "startLon": -73.989005,
       "bbox": {
         "minLat": 40.717899,
         "maxLat": 40.762857,
@@ -1100,6 +1202,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 153,
       "startTime": "2025-04-29T23:02:11.000Z",
       "endTime": "2025-04-29T23:37:07.000Z",
+      "startLat": 40.717288,
+      "startLon": -74.032386,
       "bbox": {
         "minLat": 40.717288,
         "maxLat": 40.760876,
@@ -1121,6 +1225,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 151,
       "startTime": "2025-05-01T02:06:40.000Z",
       "endTime": "2025-05-01T02:32:58.000Z",
+      "startLat": 40.761489,
+      "startLon": -74.020706,
       "bbox": {
         "minLat": 40.761489,
         "maxLat": 40.765481,
@@ -1142,6 +1248,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 143,
       "startTime": "2025-05-04T17:38:17.000Z",
       "endTime": "2025-05-04T21:04:53.000Z",
+      "startLat": 40.892045,
+      "startLon": -73.896744,
       "bbox": {
         "minLat": 40.76401,
         "maxLat": 40.899142,
@@ -1163,6 +1271,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 166,
       "startTime": "2025-05-07T00:24:20.000Z",
       "endTime": "2025-05-07T00:46:45.000Z",
+      "startLat": 40.764281,
+      "startLon": -74.017429,
       "bbox": {
         "minLat": 40.763976,
         "maxLat": 40.765505,
@@ -1184,6 +1294,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 120,
       "startTime": "2025-05-14T00:09:46.000Z",
       "endTime": "2025-05-14T00:55:46.000Z",
+      "startLat": 40.762127,
+      "startLon": -74.020391,
       "bbox": {
         "minLat": 40.762127,
         "maxLat": 40.765519,
@@ -1205,6 +1317,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 140,
       "startTime": "2025-05-15T23:24:23.000Z",
       "endTime": "2025-05-16T00:09:03.000Z",
+      "startLat": 40.762294,
+      "startLon": -74.020175,
       "bbox": {
         "minLat": 40.761156,
         "maxLat": 40.765528,
@@ -1226,6 +1340,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 129,
       "startTime": "2025-05-17T23:52:34.000Z",
       "endTime": "2025-05-18T00:50:01.000Z",
+      "startLat": 40.773129,
+      "startLon": -111.841024,
       "bbox": {
         "minLat": 40.767834,
         "maxLat": 40.777772,
@@ -1247,6 +1363,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 132,
       "startTime": "2025-05-19T01:04:03.000Z",
       "endTime": "2025-05-19T02:00:31.000Z",
+      "startLat": 42.899277,
+      "startLon": -109.826342,
       "bbox": {
         "minLat": 42.891777,
         "maxLat": 42.905382,
@@ -1268,6 +1386,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 126,
       "startTime": "2025-05-19T23:39:26.000Z",
       "endTime": "2025-05-20T01:18:41.000Z",
+      "startLat": 43.472426,
+      "startLon": -110.76179,
       "bbox": {
         "minLat": 43.461649,
         "maxLat": 43.473358,
@@ -1289,6 +1409,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 114,
       "startTime": "2025-05-20T23:29:13.000Z",
       "endTime": "2025-05-21T01:06:10.000Z",
+      "startLat": 43.476199,
+      "startLon": -110.741372,
       "bbox": {
         "minLat": 43.471188,
         "maxLat": 43.47773,
@@ -1310,6 +1432,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 122,
       "startTime": "2025-05-21T22:14:01.000Z",
       "endTime": "2025-05-22T00:12:46.000Z",
+      "startLat": 43.750891,
+      "startLon": -110.723813,
       "bbox": {
         "minLat": 43.747877,
         "maxLat": 43.78404,
@@ -1331,6 +1455,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 153,
       "startTime": "2025-05-29T17:59:03.000Z",
       "endTime": "2025-05-29T18:32:06.000Z",
+      "startLat": 40.764541,
+      "startLon": -74.018284,
       "bbox": {
         "minLat": 40.761463,
         "maxLat": 40.765497,
@@ -1352,6 +1478,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 154,
       "startTime": "2025-05-30T21:22:16.000Z",
       "endTime": "2025-05-30T22:02:58.000Z",
+      "startLat": 40.760017,
+      "startLon": -74.021908,
       "bbox": {
         "minLat": 40.71465,
         "maxLat": 40.760017,
@@ -1373,6 +1501,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 129,
       "startTime": "2025-06-01T22:10:28.000Z",
       "endTime": "2025-06-01T23:20:40.000Z",
+      "startLat": 40.761112,
+      "startLon": -74.020961,
       "bbox": {
         "minLat": 40.761112,
         "maxLat": 40.778368,
@@ -1394,6 +1524,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 136,
       "startTime": "2025-06-04T00:30:35.000Z",
       "endTime": "2025-06-04T01:17:58.000Z",
+      "startLat": 40.761284,
+      "startLon": -74.020945,
       "bbox": {
         "minLat": 40.761281,
         "maxLat": 40.765507,
@@ -1415,6 +1547,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 148,
       "startTime": "2025-06-07T16:06:32.000Z",
       "endTime": "2025-06-07T16:34:46.000Z",
+      "startLat": 40.76131,
+      "startLon": -74.020894,
       "bbox": {
         "minLat": 40.76131,
         "maxLat": 40.765522,
@@ -1436,6 +1570,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 138,
       "startTime": "2025-06-08T20:54:16.000Z",
       "endTime": "2025-06-08T22:30:42.000Z",
+      "startLat": 40.844341,
+      "startLon": -73.965393,
       "bbox": {
         "minLat": 40.844341,
         "maxLat": 40.950051,
@@ -1457,6 +1593,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 140,
       "startTime": "2025-06-10T23:29:06.000Z",
       "endTime": "2025-06-11T00:09:30.000Z",
+      "startLat": 40.762905,
+      "startLon": -74.022056,
       "bbox": {
         "minLat": 40.762905,
         "maxLat": 40.765505,
@@ -1478,6 +1616,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 137,
       "startTime": "2025-06-12T21:18:23.000Z",
       "endTime": "2025-06-12T21:51:15.000Z",
+      "startLat": 40.762905,
+      "startLon": -74.019765,
       "bbox": {
         "minLat": 40.7627,
         "maxLat": 40.765496,
@@ -1499,6 +1639,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 118,
       "startTime": "2025-06-13T22:33:21.000Z",
       "endTime": "2025-06-13T23:02:13.000Z",
+      "startLat": 40.579697,
+      "startLon": -74.003588,
       "bbox": {
         "minLat": 40.571444,
         "maxLat": 40.581079,
@@ -1520,6 +1662,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 132,
       "startTime": "2025-06-15T17:19:37.000Z",
       "endTime": "2025-06-15T19:43:02.000Z",
+      "startLat": 40.727744,
+      "startLon": -74.303786,
       "bbox": {
         "minLat": 40.727175,
         "maxLat": 40.815666,
@@ -1541,6 +1685,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 129,
       "startTime": "2025-06-17T23:08:25.000Z",
       "endTime": "2025-06-18T00:10:47.000Z",
+      "startLat": 40.76319,
+      "startLon": -74.019562,
       "bbox": {
         "minLat": 40.760357,
         "maxLat": 40.765495,
@@ -1562,6 +1708,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 141,
       "startTime": "2025-06-20T13:14:47.000Z",
       "endTime": "2025-06-20T13:41:44.000Z",
+      "startLat": 40.759463,
+      "startLon": -74.023505,
       "bbox": {
         "minLat": 40.759463,
         "maxLat": 40.774485,
@@ -1583,6 +1731,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 129,
       "startTime": "2025-06-22T01:50:30.000Z",
       "endTime": "2025-06-22T02:31:33.000Z",
+      "startLat": 40.760818,
+      "startLon": -74.020625,
       "bbox": {
         "minLat": 40.760818,
         "maxLat": 40.765495,
@@ -1604,6 +1754,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 137,
       "startTime": "2025-06-22T01:54:44.000Z",
       "endTime": "2025-06-22T02:31:58.000Z",
+      "startLat": 40.763933,
+      "startLon": -74.018886,
       "bbox": {
         "minLat": 40.761387,
         "maxLat": 40.765493,
@@ -1625,6 +1777,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 155,
       "startTime": "2025-06-24T23:49:37.000Z",
       "endTime": "2025-06-25T00:16:08.000Z",
+      "startLat": 40.760448,
+      "startLon": -74.019763,
       "bbox": {
         "minLat": 40.748597,
         "maxLat": 40.761015,
@@ -1646,6 +1800,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 136,
       "startTime": "2025-06-30T01:00:56.000Z",
       "endTime": "2025-06-30T04:12:24.000Z",
+      "startLat": 47.658201,
+      "startLon": -122.313128,
       "bbox": {
         "minLat": 47.620532,
         "maxLat": 47.668603,
@@ -1667,6 +1823,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 125,
       "startTime": "2025-07-01T14:33:48.000Z",
       "endTime": "2025-07-01T15:38:03.000Z",
+      "startLat": 47.66362,
+      "startLon": -122.313029,
       "bbox": {
         "minLat": 47.663604,
         "maxLat": 47.684953,
@@ -1688,6 +1846,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 135,
       "startTime": "2025-07-02T18:38:22.000Z",
       "endTime": "2025-07-02T19:46:02.000Z",
+      "startLat": 47.663104,
+      "startLon": -122.312531,
       "bbox": {
         "minLat": 47.631465,
         "maxLat": 47.663186,
@@ -1709,6 +1869,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 118,
       "startTime": "2025-07-08T02:52:06.000Z",
       "endTime": "2025-07-08T04:14:27.000Z",
+      "startLat": 47.594651,
+      "startLon": -122.384036,
       "bbox": {
         "minLat": 47.557464,
         "maxLat": 47.595392,
@@ -1730,6 +1892,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 141,
       "startTime": "2025-07-09T23:02:40.000Z",
       "endTime": "2025-07-10T02:55:18.000Z",
+      "startLat": 47.654126,
+      "startLon": -122.308037,
       "bbox": {
         "minLat": 47.577136,
         "maxLat": 47.654126,
@@ -1751,6 +1915,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 135,
       "startTime": "2025-07-16T00:46:14.000Z",
       "endTime": "2025-07-16T01:18:29.000Z",
+      "startLat": 40.761054,
+      "startLon": -74.021122,
       "bbox": {
         "minLat": 40.760546,
         "maxLat": 40.765515,
@@ -1772,6 +1938,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 125,
       "startTime": "2025-07-22T12:48:07.000Z",
       "endTime": "2025-07-22T13:30:42.000Z",
+      "startLat": 40.760535,
+      "startLon": -74.019745,
       "bbox": {
         "minLat": 40.760515,
         "maxLat": 40.765511,
@@ -1793,6 +1961,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 139,
       "startTime": "2025-07-23T22:11:44.000Z",
       "endTime": "2025-07-23T22:57:13.000Z",
+      "startLat": 40.758022,
+      "startLon": -73.989475,
       "bbox": {
         "minLat": 40.716526,
         "maxLat": 40.763343,
@@ -1814,6 +1984,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 149,
       "startTime": "2025-07-23T23:34:15.000Z",
       "endTime": "2025-07-24T00:01:23.000Z",
+      "startLat": 40.733271,
+      "startLon": -74.063186,
       "bbox": {
         "minLat": 40.733271,
         "maxLat": 40.754952,
@@ -1835,6 +2007,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 158,
       "startTime": "2025-07-26T21:21:00.000Z",
       "endTime": "2025-07-26T21:49:59.000Z",
+      "startLat": 40.670794,
+      "startLon": -73.971126,
       "bbox": {
         "minLat": 40.652084,
         "maxLat": 40.670794,
@@ -1856,6 +2030,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 144,
       "startTime": "2025-08-01T01:33:02.000Z",
       "endTime": "2025-08-01T02:09:29.000Z",
+      "startLat": 40.760902,
+      "startLon": -74.020916,
       "bbox": {
         "minLat": 40.760165,
         "maxLat": 40.765508,
@@ -1877,6 +2053,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 135,
       "startTime": "2025-08-01T23:41:09.000Z",
       "endTime": "2025-08-02T00:25:35.000Z",
+      "startLat": 40.760661,
+      "startLon": -74.020121,
       "bbox": {
         "minLat": 40.746882,
         "maxLat": 40.761652,
@@ -1898,6 +2076,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 152,
       "startTime": "2025-08-02T11:56:19.000Z",
       "endTime": "2025-08-02T14:45:08.000Z",
+      "startLat": 40.763156,
+      "startLon": -73.984708,
       "bbox": {
         "minLat": 40.715211,
         "maxLat": 40.809224,
@@ -1919,6 +2099,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 137,
       "startTime": "2025-08-06T00:31:10.000Z",
       "endTime": "2025-08-06T01:19:30.000Z",
+      "startLat": 40.763263,
+      "startLon": -74.019656,
       "bbox": {
         "minLat": 40.760799,
         "maxLat": 40.765539,
@@ -1940,6 +2122,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 126,
       "startTime": "2025-08-06T21:42:47.000Z",
       "endTime": "2025-08-06T21:57:57.000Z",
+      "startLat": 40.760564,
+      "startLon": -74.020325,
       "bbox": {
         "minLat": 40.760564,
         "maxLat": 40.776527,
@@ -1961,6 +2145,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 128,
       "startTime": "2025-08-06T23:09:43.000Z",
       "endTime": "2025-08-07T00:05:04.000Z",
+      "startLat": 40.706102,
+      "startLon": -74.002966,
       "bbox": {
         "minLat": 40.69346,
         "maxLat": 40.712565,
@@ -1982,6 +2168,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 145,
       "startTime": "2025-08-08T01:25:41.000Z",
       "endTime": "2025-08-08T01:51:52.000Z",
+      "startLat": 40.763826,
+      "startLon": -74.020785,
       "bbox": {
         "minLat": 40.761531,
         "maxLat": 40.769116,
@@ -2003,6 +2191,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 137,
       "startTime": "2025-08-09T14:45:52.000Z",
       "endTime": "2025-08-09T17:14:18.000Z",
+      "startLat": 40.853652,
+      "startLon": -73.96186,
       "bbox": {
         "minLat": 40.771299,
         "maxLat": 40.865382,
@@ -2024,6 +2214,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 145,
       "startTime": "2025-08-12T21:59:04.000Z",
       "endTime": "2025-08-12T23:25:14.000Z",
+      "startLat": 40.756831,
+      "startLon": -73.985001,
       "bbox": {
         "minLat": 40.715111,
         "maxLat": 40.762954,
@@ -2045,6 +2237,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 133,
       "startTime": "2025-08-15T22:32:08.000Z",
       "endTime": "2025-08-16T00:21:48.000Z",
+      "startLat": 40.583908,
+      "startLon": -73.664397,
       "bbox": {
         "minLat": 40.580681,
         "maxLat": 40.596644,
@@ -2066,6 +2260,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 142,
       "startTime": "2025-08-19T23:10:20.000Z",
       "endTime": "2025-08-20T00:08:27.000Z",
+      "startLat": 40.761214,
+      "startLon": -74.020967,
       "bbox": {
         "minLat": 40.761214,
         "maxLat": 40.76555,
@@ -2087,6 +2283,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 133,
       "startTime": "2025-08-22T23:39:00.000Z",
       "endTime": "2025-08-23T00:35:39.000Z",
+      "startLat": 40.805681,
+      "startLon": -73.998195,
       "bbox": {
         "minLat": 40.763134,
         "maxLat": 40.806622,
@@ -2108,6 +2306,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 138,
       "startTime": "2025-08-23T14:48:43.000Z",
       "endTime": "2025-08-23T16:46:09.000Z",
+      "startLat": 40.875464,
+      "startLon": -73.946891,
       "bbox": {
         "minLat": 40.875464,
         "maxLat": 40.970192,
@@ -2129,6 +2329,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 142,
       "startTime": "2025-08-27T01:09:18.000Z",
       "endTime": "2025-08-27T01:44:30.000Z",
+      "startLat": 40.760586,
+      "startLon": -74.020074,
       "bbox": {
         "minLat": 40.760586,
         "maxLat": 40.76554,
@@ -2150,6 +2352,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 123,
       "startTime": "2025-08-27T21:58:59.000Z",
       "endTime": "2025-08-27T22:57:43.000Z",
+      "startLat": 40.771683,
+      "startLon": -73.918213,
       "bbox": {
         "minLat": 40.771683,
         "maxLat": 40.801958,
@@ -2171,6 +2375,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 127,
       "startTime": "2025-08-31T06:12:30.000Z",
       "endTime": "2025-08-31T07:57:48.000Z",
+      "startLat": 51.506439,
+      "startLon": -0.098294,
       "bbox": {
         "minLat": 51.486932,
         "maxLat": 51.511429,
@@ -2192,6 +2398,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 115,
       "startTime": "2025-09-04T04:55:17.000Z",
       "endTime": "2025-09-04T06:25:17.000Z",
+      "startLat": 48.866712,
+      "startLon": 2.309436,
       "bbox": {
         "minLat": 48.854685,
         "maxLat": 48.874877,
@@ -2213,6 +2421,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 141,
       "startTime": "2025-09-09T13:02:47.000Z",
       "endTime": "2025-09-09T13:38:28.000Z",
+      "startLat": 40.761295,
+      "startLon": -74.020937,
       "bbox": {
         "minLat": 40.761101,
         "maxLat": 40.765522,
@@ -2234,6 +2444,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 141,
       "startTime": "2025-09-10T22:21:14.000Z",
       "endTime": "2025-09-10T23:17:41.000Z",
+      "startLat": 40.757228,
+      "startLon": -73.987249,
       "bbox": {
         "minLat": 40.718021,
         "maxLat": 40.762878,
@@ -2255,6 +2467,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 151,
       "startTime": "2025-09-12T23:22:55.000Z",
       "endTime": "2025-09-12T23:54:54.000Z",
+      "startLat": 40.768712,
+      "startLon": -73.980394,
       "bbox": {
         "minLat": 40.767207,
         "maxLat": 40.79175,
@@ -2276,6 +2490,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 130,
       "startTime": "2025-09-17T02:24:41.000Z",
       "endTime": "2025-09-17T02:56:16.000Z",
+      "startLat": 40.759075,
+      "startLon": -74.021184,
       "bbox": {
         "minLat": 40.759021,
         "maxLat": 40.765888,
@@ -2297,6 +2513,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 130,
       "startTime": "2025-09-17T22:19:48.000Z",
       "endTime": "2025-09-17T22:51:01.000Z",
+      "startLat": 40.760522,
+      "startLon": -74.019795,
       "bbox": {
         "minLat": 40.748499,
         "maxLat": 40.76102,
@@ -2318,6 +2536,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 138,
       "startTime": "2025-09-19T01:40:53.000Z",
       "endTime": "2025-09-19T02:29:14.000Z",
+      "startLat": 40.762747,
+      "startLon": -74.0198,
       "bbox": {
         "minLat": 40.762747,
         "maxLat": 40.765519,
@@ -2339,6 +2559,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 137,
       "startTime": "2025-09-21T15:47:20.000Z",
       "endTime": "2025-09-21T17:32:56.000Z",
+      "startLat": 40.480864,
+      "startLon": -76.531377,
       "bbox": {
         "minLat": 40.480864,
         "maxLat": 40.527133,
@@ -2360,6 +2582,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 138,
       "startTime": "2025-09-24T00:42:13.000Z",
       "endTime": "2025-09-24T01:41:42.000Z",
+      "startLat": 40.760827,
+      "startLon": -74.020681,
       "bbox": {
         "minLat": 40.760827,
         "maxLat": 40.765527,
@@ -2381,6 +2605,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 128,
       "startTime": "2025-09-26T01:23:56.000Z",
       "endTime": "2025-09-26T01:59:09.000Z",
+      "startLat": 40.760506,
+      "startLon": -74.019988,
       "bbox": {
         "minLat": 40.757189,
         "maxLat": 40.761691,
@@ -2402,6 +2628,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 130,
       "startTime": "2025-10-04T18:12:45.000Z",
       "endTime": "2025-10-04T18:38:09.000Z",
+      "startLat": 40.760375,
+      "startLon": -74.020065,
       "bbox": {
         "minLat": 40.760375,
         "maxLat": 40.765543,
@@ -2423,6 +2651,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 158,
       "startTime": "2025-10-05T13:00:48.000Z",
       "endTime": "2025-10-05T13:21:54.000Z",
+      "startLat": 40.718133,
+      "startLon": -74.035495,
       "bbox": {
         "minLat": 40.718088,
         "maxLat": 40.729208,
@@ -2444,6 +2674,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 135,
       "startTime": "2025-10-08T20:26:39.000Z",
       "endTime": "2025-10-08T21:12:04.000Z",
+      "startLat": 40.760528,
+      "startLon": -74.020438,
       "bbox": {
         "minLat": 40.760528,
         "maxLat": 40.765569,
@@ -2465,6 +2697,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 148,
       "startTime": "2025-10-14T22:12:11.000Z",
       "endTime": "2025-10-14T23:06:32.000Z",
+      "startLat": 40.76052,
+      "startLon": -74.019879,
       "bbox": {
         "minLat": 40.760517,
         "maxLat": 40.791411,
@@ -2486,6 +2720,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 149,
       "startTime": "2025-10-16T22:09:11.000Z",
       "endTime": "2025-10-16T23:01:47.000Z",
+      "startLat": 40.760686,
+      "startLon": -74.020453,
       "bbox": {
         "minLat": 40.760686,
         "maxLat": 40.771899,
@@ -2507,6 +2743,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 129,
       "startTime": "2025-10-17T21:39:26.000Z",
       "endTime": "2025-10-17T22:12:44.000Z",
+      "startLat": 40.761192,
+      "startLon": -74.023688,
       "bbox": {
         "minLat": 40.728698,
         "maxLat": 40.761342,
@@ -2528,6 +2766,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 149,
       "startTime": "2025-10-22T23:10:15.000Z",
       "endTime": "2025-10-23T00:38:04.000Z",
+      "startLat": 40.761394,
+      "startLon": -74.020864,
       "bbox": {
         "minLat": 40.761394,
         "maxLat": 40.765504,
@@ -2549,6 +2789,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 137,
       "startTime": "2025-10-23T22:29:01.000Z",
       "endTime": "2025-10-23T22:55:02.000Z",
+      "startLat": 40.760732,
+      "startLon": -74.020246,
       "bbox": {
         "minLat": 40.760712,
         "maxLat": 40.78865,
@@ -2570,6 +2812,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 143,
       "startTime": "2025-10-26T18:23:06.000Z",
       "endTime": "2025-10-26T20:18:56.000Z",
+      "startLat": 40.709771,
+      "startLon": -74.051474,
       "bbox": {
         "minLat": 40.690879,
         "maxLat": 40.709849,
@@ -2591,6 +2835,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 138,
       "startTime": "2025-10-28T22:25:21.000Z",
       "endTime": "2025-10-28T22:54:59.000Z",
+      "startLat": 40.760538,
+      "startLon": -74.019814,
       "bbox": {
         "minLat": 40.760538,
         "maxLat": 40.765551,
@@ -2612,6 +2858,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 135,
       "startTime": "2025-10-29T23:07:21.000Z",
       "endTime": "2025-10-29T23:43:20.000Z",
+      "startLat": 40.768703,
+      "startLon": -73.981296,
       "bbox": {
         "minLat": 40.76723,
         "maxLat": 40.774664,
@@ -2633,6 +2881,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 139,
       "startTime": "2025-10-31T21:10:22.000Z",
       "endTime": "2025-10-31T21:47:09.000Z",
+      "startLat": 40.767192,
+      "startLon": -73.977499,
       "bbox": {
         "minLat": 40.766787,
         "maxLat": 40.789001,
@@ -2654,6 +2904,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 142,
       "startTime": "2025-11-06T20:58:14.000Z",
       "endTime": "2025-11-06T21:27:58.000Z",
+      "startLat": 40.760981,
+      "startLon": -74.020934,
       "bbox": {
         "minLat": 40.760968,
         "maxLat": 40.765518,
@@ -2675,6 +2927,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 134,
       "startTime": "2025-11-08T20:18:00.000Z",
       "endTime": "2025-11-08T21:47:16.000Z",
+      "startLat": 40.760587,
+      "startLon": -74.019917,
       "bbox": {
         "minLat": 40.760587,
         "maxLat": 40.791391,
@@ -2696,6 +2950,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 141,
       "startTime": "2025-11-12T18:09:30.000Z",
       "endTime": "2025-11-12T18:54:37.000Z",
+      "startLat": 39.948423,
+      "startLon": -75.176358,
       "bbox": {
         "minLat": 39.939253,
         "maxLat": 39.950756,
@@ -2717,6 +2973,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 132,
       "startTime": "2025-11-13T20:17:15.000Z",
       "endTime": "2025-11-13T22:00:43.000Z",
+      "startLat": 39.950005,
+      "startLon": -75.177563,
       "bbox": {
         "minLat": 39.948574,
         "maxLat": 39.986877,
@@ -2738,6 +2996,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 126,
       "startTime": "2025-11-18T19:15:47.000Z",
       "endTime": "2025-11-18T20:39:24.000Z",
+      "startLat": 41.500263,
+      "startLon": -73.960594,
       "bbox": {
         "minLat": 41.488286,
         "maxLat": 41.505052,
@@ -2759,6 +3019,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 145,
       "startTime": "2025-11-20T19:21:30.000Z",
       "endTime": "2025-11-20T20:21:36.000Z",
+      "startLat": 41.500228,
+      "startLon": -73.960857,
       "bbox": {
         "minLat": 41.500228,
         "maxLat": 41.520099,
@@ -2780,6 +3042,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 135,
       "startTime": "2025-11-22T18:52:51.000Z",
       "endTime": "2025-11-22T20:32:52.000Z",
+      "startLat": 40.854868,
+      "startLon": -73.965504,
       "bbox": {
         "minLat": 40.84979,
         "maxLat": 40.876561,
@@ -2801,6 +3065,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 145,
       "startTime": "2025-11-24T19:18:18.000Z",
       "endTime": "2025-11-24T19:51:56.000Z",
+      "startLat": 40.747302,
+      "startLon": -73.956778,
       "bbox": {
         "minLat": 40.734463,
         "maxLat": 40.747765,
@@ -2822,6 +3088,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 140,
       "startTime": "2025-11-26T18:11:34.000Z",
       "endTime": "2025-11-26T18:57:14.000Z",
+      "startLat": 40.747292,
+      "startLon": -73.954892,
       "bbox": {
         "minLat": 40.746961,
         "maxLat": 40.76055,
@@ -2843,6 +3111,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 153,
       "startTime": "2025-12-01T03:24:15.000Z",
       "endTime": "2025-12-01T03:45:49.000Z",
+      "startLat": 40.748746,
+      "startLon": -73.956646,
       "bbox": {
         "minLat": 40.738252,
         "maxLat": 40.748869,
@@ -2864,6 +3134,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 142,
       "startTime": "2025-12-03T02:55:21.000Z",
       "endTime": "2025-12-03T03:26:36.000Z",
+      "startLat": 40.747416,
+      "startLon": -73.956533,
       "bbox": {
         "minLat": 40.738428,
         "maxLat": 40.74889,
@@ -2885,6 +3157,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 143,
       "startTime": "2025-12-04T19:02:27.000Z",
       "endTime": "2025-12-04T19:54:13.000Z",
+      "startLat": 40.747616,
+      "startLon": -73.956577,
       "bbox": {
         "minLat": 40.746966,
         "maxLat": 40.75787,
@@ -2906,6 +3180,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 143,
       "startTime": "2025-12-06T18:50:58.000Z",
       "endTime": "2025-12-06T20:11:25.000Z",
+      "startLat": 40.746629,
+      "startLon": -73.956343,
       "bbox": {
         "minLat": 40.685163,
         "maxLat": 40.746629,
@@ -2927,6 +3203,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 148,
       "startTime": "2025-12-10T18:09:08.000Z",
       "endTime": "2025-12-10T18:47:28.000Z",
+      "startLat": 40.748063,
+      "startLon": -73.956936,
       "bbox": {
         "minLat": 40.747015,
         "maxLat": 40.762793,
@@ -2948,6 +3226,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 153,
       "startTime": "2025-12-11T18:28:07.000Z",
       "endTime": "2025-12-11T18:54:05.000Z",
+      "startLat": 40.747212,
+      "startLon": -73.956632,
       "bbox": {
         "minLat": 40.735514,
         "maxLat": 40.747212,
@@ -2969,6 +3249,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 140,
       "startTime": "2025-12-12T23:03:59.000Z",
       "endTime": "2025-12-12T23:34:35.000Z",
+      "startLat": 40.75333,
+      "startLon": -73.979457,
       "bbox": {
         "minLat": 40.74582,
         "maxLat": 40.760614,
@@ -2990,6 +3272,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 134,
       "startTime": "2025-12-16T21:30:48.000Z",
       "endTime": "2025-12-16T22:03:46.000Z",
+      "startLat": 40.746428,
+      "startLon": -73.956456,
       "bbox": {
         "minLat": 40.738481,
         "maxLat": 40.748882,
@@ -3011,6 +3295,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 143,
       "startTime": "2025-12-18T18:20:35.000Z",
       "endTime": "2025-12-18T19:45:16.000Z",
+      "startLat": 40.746082,
+      "startLon": -73.956684,
       "bbox": {
         "minLat": 40.719601,
         "maxLat": 40.746082,
@@ -3032,6 +3318,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 131,
       "startTime": "2025-12-19T22:03:52.000Z",
       "endTime": "2025-12-19T22:52:09.000Z",
+      "startLat": 40.748429,
+      "startLon": -73.957037,
       "bbox": {
         "minLat": 40.734597,
         "maxLat": 40.748678,
@@ -3053,6 +3341,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 138,
       "startTime": "2025-12-21T17:48:05.000Z",
       "endTime": "2025-12-21T19:47:09.000Z",
+      "startLat": 40.680717,
+      "startLon": -74.013578,
       "bbox": {
         "minLat": 40.672327,
         "maxLat": 40.747395,
@@ -3074,6 +3364,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 126,
       "startTime": "2025-12-24T02:46:24.000Z",
       "endTime": "2025-12-24T03:01:13.000Z",
+      "startLat": 40.745993,
+      "startLon": -73.956661,
       "bbox": {
         "minLat": 40.742739,
         "maxLat": 40.747223,
@@ -3095,6 +3387,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 147,
       "startTime": "2025-12-25T13:27:41.000Z",
       "endTime": "2025-12-25T14:37:10.000Z",
+      "startLat": 40.753842,
+      "startLon": -73.980345,
       "bbox": {
         "minLat": 40.707319,
         "maxLat": 40.765562,
@@ -3116,6 +3410,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 138,
       "startTime": "2025-12-26T14:10:40.000Z",
       "endTime": "2025-12-26T14:45:12.000Z",
+      "startLat": 19.433304,
+      "startLon": -99.14124,
       "bbox": {
         "minLat": 19.431812,
         "maxLat": 19.439869,
@@ -3137,6 +3433,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 130,
       "startTime": "2025-12-30T15:39:53.000Z",
       "endTime": "2025-12-30T16:06:54.000Z",
+      "startLat": 19.419783,
+      "startLon": -99.167411,
       "bbox": {
         "minLat": 19.41182,
         "maxLat": 19.419915,
@@ -3158,6 +3456,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 141,
       "startTime": "2026-01-06T22:44:12.000Z",
       "endTime": "2026-01-06T23:23:08.000Z",
+      "startLat": 40.754485,
+      "startLon": -73.978068,
       "bbox": {
         "minLat": 40.746967,
         "maxLat": 40.76061,
@@ -3179,6 +3479,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 155,
       "startTime": "2026-01-08T20:49:00.000Z",
       "endTime": "2026-01-08T21:18:29.000Z",
+      "startLat": 40.748267,
+      "startLon": -73.956868,
       "bbox": {
         "minLat": 40.738527,
         "maxLat": 40.748678,
@@ -3200,6 +3502,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 136,
       "startTime": "2026-01-09T21:41:12.000Z",
       "endTime": "2026-01-09T22:51:56.000Z",
+      "startLat": 40.74641,
+      "startLon": -73.956123,
       "bbox": {
         "minLat": 40.718486,
         "maxLat": 40.747086,
@@ -3221,6 +3525,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 141,
       "startTime": "2026-01-13T19:06:55.000Z",
       "endTime": "2026-01-13T19:41:21.000Z",
+      "startLat": 40.747439,
+      "startLon": -73.956584,
       "bbox": {
         "minLat": 40.738509,
         "maxLat": 40.749451,
@@ -3242,6 +3548,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 130,
       "startTime": "2026-01-14T22:36:30.000Z",
       "endTime": "2026-01-15T00:03:48.000Z",
+      "startLat": 40.766117,
+      "startLon": -73.976173,
       "bbox": {
         "minLat": 40.746511,
         "maxLat": 40.789,
@@ -3263,6 +3571,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 132,
       "startTime": "2026-01-17T18:32:46.000Z",
       "endTime": "2026-01-17T19:11:01.000Z",
+      "startLat": 40.74772,
+      "startLon": -73.956629,
       "bbox": {
         "minLat": 40.738544,
         "maxLat": 40.748869,
@@ -3284,6 +3594,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 146,
       "startTime": "2026-01-22T20:07:02.000Z",
       "endTime": "2026-01-22T21:35:37.000Z",
+      "startLat": 40.772175,
+      "startLon": -73.936183,
       "bbox": {
         "minLat": 40.772175,
         "maxLat": 40.780112,
@@ -3305,6 +3617,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 143,
       "startTime": "2026-01-27T18:29:47.000Z",
       "endTime": "2026-01-27T19:10:49.000Z",
+      "startLat": 40.748568,
+      "startLon": -73.957139,
       "bbox": {
         "minLat": 40.73849,
         "maxLat": 40.748568,
@@ -3326,6 +3640,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 150,
       "startTime": "2026-01-29T20:03:26.000Z",
       "endTime": "2026-01-29T20:33:47.000Z",
+      "startLat": 40.748048,
+      "startLon": -73.957664,
       "bbox": {
         "minLat": 40.738491,
         "maxLat": 40.748612,
@@ -3347,6 +3663,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 149,
       "startTime": "2026-01-31T19:34:08.000Z",
       "endTime": "2026-01-31T21:27:52.000Z",
+      "startLat": 40.747435,
+      "startLon": -73.954656,
       "bbox": {
         "minLat": 40.746974,
         "maxLat": 40.799501,
@@ -3368,6 +3686,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 148,
       "startTime": "2026-02-03T18:40:09.000Z",
       "endTime": "2026-02-03T19:07:30.000Z",
+      "startLat": 40.748196,
+      "startLon": -73.957525,
       "bbox": {
         "minLat": 40.738202,
         "maxLat": 40.748594,
@@ -3389,6 +3709,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 139,
       "startTime": "2026-02-05T20:28:54.000Z",
       "endTime": "2026-02-05T21:09:38.000Z",
+      "startLat": 40.747463,
+      "startLon": -73.957807,
       "bbox": {
         "minLat": 40.734492,
         "maxLat": 40.748037,
@@ -3410,6 +3732,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 151,
       "startTime": "2026-02-07T21:50:22.000Z",
       "endTime": "2026-02-07T22:25:05.000Z",
+      "startLat": 40.74881,
+      "startLon": -73.95707,
       "bbox": {
         "minLat": 40.738495,
         "maxLat": 40.748821,
@@ -3431,6 +3755,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 134,
       "startTime": "2026-02-09T22:28:34.000Z",
       "endTime": "2026-02-09T23:07:43.000Z",
+      "startLat": 40.747381,
+      "startLon": -73.954911,
       "bbox": {
         "minLat": 40.746983,
         "maxLat": 40.758121,
@@ -3452,6 +3778,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 143,
       "startTime": "2026-02-10T22:48:31.000Z",
       "endTime": "2026-02-10T23:18:29.000Z",
+      "startLat": 40.747843,
+      "startLon": -73.957539,
       "bbox": {
         "minLat": 40.738482,
         "maxLat": 40.748841,
@@ -3473,6 +3801,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 130,
       "startTime": "2026-02-12T13:38:13.000Z",
       "endTime": "2026-02-12T14:00:30.000Z",
+      "startLat": 40.747907,
+      "startLon": -73.957739,
       "bbox": {
         "minLat": 40.738234,
         "maxLat": 40.747907,
@@ -3494,6 +3824,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 135,
       "startTime": "2026-02-13T22:01:46.000Z",
       "endTime": "2026-02-13T23:54:07.000Z",
+      "startLat": 40.745529,
+      "startLon": -73.958313,
       "bbox": {
         "minLat": 40.701448,
         "maxLat": 40.745529,
@@ -3515,6 +3847,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 140,
       "startTime": "2026-02-16T19:58:48.000Z",
       "endTime": "2026-02-16T20:36:36.000Z",
+      "startLat": 44.284041,
+      "startLon": -73.98223,
       "bbox": {
         "minLat": 44.283857,
         "maxLat": 44.293555,
@@ -3536,6 +3870,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 156,
       "startTime": "2026-02-19T18:59:35.000Z",
       "endTime": "2026-02-19T19:39:31.000Z",
+      "startLat": 40.74887,
+      "startLon": -73.95705,
       "bbox": {
         "minLat": 40.738512,
         "maxLat": 40.74887,
@@ -3557,6 +3893,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 153,
       "startTime": "2026-02-21T18:48:59.000Z",
       "endTime": "2026-02-21T21:15:37.000Z",
+      "startLat": 40.700477,
+      "startLon": -73.97171,
       "bbox": {
         "minLat": 40.651328,
         "maxLat": 40.700477,
@@ -3578,6 +3916,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 140,
       "startTime": "2026-02-26T01:08:05.000Z",
       "endTime": "2026-02-26T01:31:54.000Z",
+      "startLat": 40.748701,
+      "startLon": -73.957113,
       "bbox": {
         "minLat": 40.738865,
         "maxLat": 40.748734,
@@ -3599,6 +3939,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 161,
       "startTime": "2026-02-26T19:30:52.000Z",
       "endTime": "2026-02-26T19:59:20.000Z",
+      "startLat": 40.748482,
+      "startLon": -73.957427,
       "bbox": {
         "minLat": 40.738424,
         "maxLat": 40.748482,
@@ -3620,6 +3962,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 145,
       "startTime": "2026-02-28T23:46:26.000Z",
       "endTime": "2026-03-01T02:22:38.000Z",
+      "startLat": 32.995695,
+      "startLon": -117.272594,
       "bbox": {
         "minLat": 32.995695,
         "maxLat": 33.157887,
@@ -3641,6 +3985,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 146,
       "startTime": "2026-03-02T01:13:01.000Z",
       "endTime": "2026-03-02T02:56:13.000Z",
+      "startLat": 32.704494,
+      "startLon": -117.157995,
       "bbox": {
         "minLat": 32.702897,
         "maxLat": 32.72748,
@@ -3662,6 +4008,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 136,
       "startTime": "2026-03-03T02:48:56.000Z",
       "endTime": "2026-03-03T04:32:07.000Z",
+      "startLat": 32.844202,
+      "startLon": -117.268111,
       "bbox": {
         "minLat": 32.826196,
         "maxLat": 32.851002,
@@ -3683,6 +4031,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 139,
       "startTime": "2026-03-03T23:33:11.000Z",
       "endTime": "2026-03-04T01:43:20.000Z",
+      "startLat": 32.852331,
+      "startLon": -117.261207,
       "bbox": {
         "minLat": 32.852331,
         "maxLat": 32.92691,
@@ -3704,6 +4054,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 130,
       "startTime": "2026-03-05T01:00:16.000Z",
       "endTime": "2026-03-05T02:08:51.000Z",
+      "startLat": 32.84404,
+      "startLon": -117.268218,
       "bbox": {
         "minLat": 32.789481,
         "maxLat": 32.84404,
@@ -3725,6 +4077,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 144,
       "startTime": "2026-03-06T17:58:38.000Z",
       "endTime": "2026-03-06T18:51:54.000Z",
+      "startLat": 33.863382,
+      "startLon": -116.554755,
       "bbox": {
         "minLat": 33.861635,
         "maxLat": 33.870339,
@@ -3746,6 +4100,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 140,
       "startTime": "2026-03-09T01:18:09.000Z",
       "endTime": "2026-03-09T02:15:25.000Z",
+      "startLat": 32.719243,
+      "startLon": -117.254628,
       "bbox": {
         "minLat": 32.719243,
         "maxLat": 32.746703,
@@ -3767,6 +4123,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 149,
       "startTime": "2026-03-10T21:51:32.000Z",
       "endTime": "2026-03-11T00:08:21.000Z",
+      "startLat": 40.757963,
+      "startLon": -73.98955,
       "bbox": {
         "minLat": 40.700681,
         "maxLat": 40.762935,
@@ -3788,6 +4146,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 137,
       "startTime": "2026-03-13T23:11:44.000Z",
       "endTime": "2026-03-14T00:19:50.000Z",
+      "startLat": 40.744559,
+      "startLon": -73.957953,
       "bbox": {
         "minLat": 40.719245,
         "maxLat": 40.744559,
@@ -3809,6 +4169,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 146,
       "startTime": "2026-03-15T15:49:49.000Z",
       "endTime": "2026-03-15T18:52:44.000Z",
+      "startLat": 40.775137,
+      "startLon": -73.973841,
       "bbox": {
         "minLat": 40.76466,
         "maxLat": 40.799544,
@@ -3830,6 +4192,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 146,
       "startTime": "2026-03-17T21:59:12.000Z",
       "endTime": "2026-03-17T23:04:59.000Z",
+      "startLat": 40.746161,
+      "startLon": -73.956255,
       "bbox": {
         "minLat": 40.71261,
         "maxLat": 40.746161,
@@ -3851,6 +4215,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 140,
       "startTime": "2026-03-20T23:34:54.000Z",
       "endTime": "2026-03-21T00:49:01.000Z",
+      "startLat": 40.768525,
+      "startLon": -73.981207,
       "bbox": {
         "minLat": 40.746974,
         "maxLat": 40.783487,
@@ -3872,6 +4238,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 143,
       "startTime": "2026-03-22T19:54:34.000Z",
       "endTime": "2026-03-22T23:30:05.000Z",
+      "startLat": 40.697965,
+      "startLon": -73.970892,
       "bbox": {
         "minLat": 40.651325,
         "maxLat": 40.748819,
@@ -3893,6 +4261,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 138,
       "startTime": "2026-03-27T02:09:08.000Z",
       "endTime": "2026-03-27T02:29:25.000Z",
+      "startLat": 40.74454,
+      "startLon": -73.95847,
       "bbox": {
         "minLat": 40.738229,
         "maxLat": 40.748794,
@@ -3914,6 +4284,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 129,
       "startTime": "2026-03-28T21:26:01.000Z",
       "endTime": "2026-03-28T23:48:06.000Z",
+      "startLat": 40.747328,
+      "startLon": -73.954593,
       "bbox": {
         "minLat": 40.746745,
         "maxLat": 40.772916,
@@ -3935,6 +4307,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 143,
       "startTime": "2026-04-01T01:19:17.000Z",
       "endTime": "2026-04-01T03:06:42.000Z",
+      "startLat": 40.74651,
+      "startLon": -73.955992,
       "bbox": {
         "minLat": 40.719249,
         "maxLat": 40.74651,
@@ -3956,6 +4330,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 132,
       "startTime": "2026-04-03T18:50:49.000Z",
       "endTime": "2026-04-03T19:24:56.000Z",
+      "startLat": 40.74767,
+      "startLon": -73.956276,
       "bbox": {
         "minLat": 40.738637,
         "maxLat": 40.748728,
@@ -3977,6 +4353,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 142,
       "startTime": "2026-04-04T19:43:09.000Z",
       "endTime": "2026-04-04T23:05:24.000Z",
+      "startLat": 40.747325,
+      "startLon": -73.954754,
       "bbox": {
         "minLat": 40.742526,
         "maxLat": 40.800375,
@@ -3998,6 +4376,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 141,
       "startTime": "2026-04-11T20:32:40.000Z",
       "endTime": "2026-04-11T22:50:38.000Z",
+      "startLat": 40.748363,
+      "startLon": -73.95662,
       "bbox": {
         "minLat": 40.747048,
         "maxLat": 40.794491,
@@ -4019,6 +4399,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 133,
       "startTime": "2026-04-14T21:20:48.000Z",
       "endTime": "2026-04-14T22:28:27.000Z",
+      "startLat": 40.747486,
+      "startLon": -73.956508,
       "bbox": {
         "minLat": 40.73445,
         "maxLat": 40.748745,
@@ -4040,6 +4422,8 @@ export const gpxSummaries: Record<string, GpxSummary> = {
       "avgHr": 133,
       "startTime": "2026-04-18T19:46:46.000Z",
       "endTime": "2026-04-18T22:06:27.000Z",
+      "startLat": 40.703225,
+      "startLon": -73.99636,
       "bbox": {
         "minLat": 40.676867,
         "maxLat": 40.70339,
