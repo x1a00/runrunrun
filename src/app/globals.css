@@ -78,4 +78,11 @@ html[data-theme="light"] {
   .font-tamzen-sm { font-family: "Tamzen5x9", "Tamzen", ui-monospace, monospace; -webkit-font-smoothing: none; }
   .font-tamzen-md { font-family: "Tamzen6x12", "Tamzen", ui-monospace, monospace; -webkit-font-smoothing: none; }
   .font-tamzen-lg { font-family: "Tamzen8x16", "Tamzen", ui-monospace, monospace; -webkit-font-smoothing: none; }
+
+  /* Thin, unobtrusive scrollbar for fixed-height scroll regions. */
+  .scroll-thin { scrollbar-width: thin; scrollbar-color: #525252 transparent; }
+  .scroll-thin::-webkit-scrollbar { width: 6px; }
+  .scroll-thin::-webkit-scrollbar-track { background: transparent; }
+  .scroll-thin::-webkit-scrollbar-thumb { background: #525252; border-radius: 3px; }
+  .scroll-thin::-webkit-scrollbar-thumb:hover { background: #737373; }
 }

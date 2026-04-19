@@ -208,23 +208,24 @@ function slugify(s, id) {
   const token = await refreshTokenIfNeeded();
 
   const acts = await listAllRuns(token);
-  // Keep a run if either condition holds:
-  //   • workout_type === 2 (Strava "Long Run" tag)  — 0|null=Default, 1=Race, 2=Long Run, 3=Workout
-  //   • distance >= 20_000 meters (any run 20 km or longer, even if untagged)
-  const LONG_KM = 20;
-  const longRuns = acts.filter(
-    (a) =>
-      a.type === "Run" &&
-      (a.workout_type === 2 || (a.distance ?? 0) >= LONG_KM * 1000),
-  );
-  const taggedCount = longRuns.filter((a) => a.workout_type === 2).length;
-  const distCount = longRuns.length - taggedCount;
+  // Keep road runs only. Strava's `type` field distinguishes:
+  //   "Run" → road/path running (what we want)
+  //   "TrailRun", "VirtualRun", "Ride", "Hike", "Walk", ... → excluded
+  const longRuns = acts.filter((a) => a.type === "Run");
+
+  // Summarize what got filtered out so the excluded buckets are visible.
+  const typeCounts = {};
+  for (const a of acts) typeCounts[a.type] = (typeCounts[a.type] ?? 0) + 1;
+  const excluded = Object.entries(typeCounts)
+    .filter(([t]) => t !== "Run")
+    .map(([t, n]) => `${n} ${t}`)
+    .join(", ");
   console.log(
-    `• ${longRuns.length} qualifying runs (${taggedCount} tagged Long Run, ${distCount} untagged but >= ${LONG_KM} km)`,
+    `• ${longRuns.length} Run activities (excluded: ${excluded || "none"})`,
   );
 
   if (!longRuns.length) {
-    console.log("\nNo qualifying runs found.");
+    console.log("\nNo Run activities found.");
     return;
   }
 

@@ -3,7 +3,7 @@
 // and the site picks them up automatically. Everything is metric, all
 // durations use MOVING time (stops excluded).
 
-import { gpxTracks, type GpxTrack } from "./gpx-processed";
+import { gpxSummaries, type GpxSummary } from "./gpx-processed";
 import type {
   AnnualMileage,
   GeoRow,
@@ -20,14 +20,14 @@ import type {
 // ---------------------------------------------------------------------------
 // Track list, sorted by start time.
 
-export const tracks: GpxTrack[] = Object.values(gpxTracks)
+export const tracks: GpxSummary[] = Object.values(gpxSummaries)
   .filter((t) => t.stats.startTime)
   .sort(
     (a, b) =>
       new Date(a.stats.startTime!).getTime() - new Date(b.stats.startTime!).getTime(),
   );
 
-function dateOf(t: GpxTrack): Date {
+function dateOf(t: GpxSummary): Date {
   return new Date(t.stats.startTime!);
 }
 
@@ -88,7 +88,7 @@ const REGIONS: Region[] = [
   { countryCode: "AU", country: "Australia",     bbox: { minLat: -44, maxLat: -10, minLon: 113, maxLon: 154 } },
 ];
 
-function locationFor(t: GpxTrack): ActivityLocation {
+function locationFor(t: GpxSummary): ActivityLocation {
   const { minLat, maxLat, minLon, maxLon } = t.stats.bbox;
   const lat = (minLat + maxLat) / 2;
   const lon = (minLon + maxLon) / 2;
@@ -150,27 +150,7 @@ export const streakStats: StreakStats = {
 // ---------------------------------------------------------------------------
 // Notable Runs
 
-function buildProfile(t: GpxTrack): NotableRun["profile"] {
-  const pts = t.points.filter((p) => p.ele != null);
-  if (pts.length < 2) return undefined;
-  const maxKm = t.stats.distanceKm || pts[pts.length - 1].km || 1;
-  const sampleEvery = 0.5; // km
-  const out: NonNullable<NotableRun["profile"]> = [];
-  let target = 0;
-  for (const p of pts) {
-    while (p.km >= target && target <= maxKm) {
-      out.push({
-        km: +target.toFixed(2),
-        m: Math.round(p.ele ?? 0),
-        paceSecPerKm: t.stats.paceSecPerKm ?? 0,
-      });
-      target += sampleEvery;
-    }
-  }
-  return out;
-}
-
-function toNotableRun(t: GpxTrack, rank: number, weather: WeatherCondition): NotableRun {
+function toNotableRun(t: GpxSummary, rank: number, weather: WeatherCondition): NotableRun {
   const d = dateOf(t);
   return {
     rank,
@@ -185,7 +165,6 @@ function toNotableRun(t: GpxTrack, rank: number, weather: WeatherCondition): Not
     location: locationFor(t),
     gpxId: t.id,
     gpxPath: `/gpx/${t.id}.gpx`,
-    profile: buildProfile(t),
   };
 }
 
@@ -193,16 +172,15 @@ function rankBy<T>(arr: T[], by: (x: T) => number): T[] {
   return arr.slice().sort((a, b) => by(b) - by(a));
 }
 
-// Benchmark shows top 10 per tab — cap our lists to match.
-const NOTABLE_LIMIT = 10;
+// Full ranked lists — the UI shows the top ~10 in a fixed-height
+// viewport and lets the user scroll to see the rest.
+const byDistance = rankBy(tracks, (t) => t.stats.distanceKm).map((t, i) =>
+  toNotableRun(t, i + 1, "clear"),
+);
 
-const byDistance = rankBy(tracks, (t) => t.stats.distanceKm)
-  .slice(0, NOTABLE_LIMIT)
-  .map((t, i) => toNotableRun(t, i + 1, "clear"));
-
-const byElevation = rankBy(tracks, (t) => t.stats.elevationM)
-  .slice(0, NOTABLE_LIMIT)
-  .map((t, i) => toNotableRun(t, i + 1, "clear"));
+const byElevation = rankBy(tracks, (t) => t.stats.elevationM).map((t, i) =>
+  toNotableRun(t, i + 1, "clear"),
+);
 
 // Personal bests: for each distance bucket, pick the fastest run that
 // reached at least that distance.
