@@ -208,16 +208,23 @@ function slugify(s, id) {
   const token = await refreshTokenIfNeeded();
 
   const acts = await listAllRuns(token);
-  // workout_type: 0|null=Default, 1=Race, 2=Long Run, 3=Workout (for runs)
+  // Keep a run if either condition holds:
+  //   • workout_type === 2 (Strava "Long Run" tag)  — 0|null=Default, 1=Race, 2=Long Run, 3=Workout
+  //   • distance >= 20_000 meters (any run 20 km or longer, even if untagged)
+  const LONG_KM = 20;
   const longRuns = acts.filter(
-    (a) => a.type === "Run" && a.workout_type === 2,
+    (a) =>
+      a.type === "Run" &&
+      (a.workout_type === 2 || (a.distance ?? 0) >= LONG_KM * 1000),
   );
-  console.log(`• ${longRuns.length} activities tagged "Long Run"`);
+  const taggedCount = longRuns.filter((a) => a.workout_type === 2).length;
+  const distCount = longRuns.length - taggedCount;
+  console.log(
+    `• ${longRuns.length} qualifying runs (${taggedCount} tagged Long Run, ${distCount} untagged but >= ${LONG_KM} km)`,
+  );
 
   if (!longRuns.length) {
-    console.log("\nNo Long Run activities found on your Strava account.");
-    console.log("Tag your runs in Strava (edit activity → Run Type → Long Run)");
-    console.log("and re-run this script.");
+    console.log("\nNo qualifying runs found.");
     return;
   }
 
