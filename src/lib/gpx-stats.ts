@@ -3,18 +3,14 @@
 // and the site picks them up automatically. Everything is metric, all
 // durations use MOVING time (stops excluded).
 
-import { readFileSync, existsSync } from "node:fs";
-import { join } from "node:path";
 import { gpxSummaries, type GpxSummary } from "./gpx-processed";
+import rawMeta from "../../public/strava-meta.json";
 
 interface StravaMeta {
   tempC?: number;
   photoPath?: string;
 }
-const META_PATH = join(process.cwd(), "public", "strava-meta.json");
-const stravaMeta: Record<string, StravaMeta> = existsSync(META_PATH)
-  ? (JSON.parse(readFileSync(META_PATH, "utf8")) as Record<string, StravaMeta>)
-  : {};
+const stravaMeta = rawMeta as Record<string, StravaMeta>;
 import type {
   AnnualMileage,
   GeoRow,
@@ -497,11 +493,10 @@ export const paceDistribution = {
 };
 
 const HR_ZONES: { label: string; bpm: string; max: number }[] = [
-  { label: "Recovery",  bpm: "<120bpm",    max: 120 },
-  { label: "Easy",      bpm: "120-140bpm", max: 140 },
-  { label: "Tempo",     bpm: "140-160bpm", max: 160 },
-  { label: "Threshold", bpm: "160-175bpm", max: 175 },
-  { label: "VO2 Max",   bpm: ">175bpm",    max: 999 },
+  { label: "Easy",      bpm: "<139bpm",    max: 139 },
+  { label: "Tempo",     bpm: "140-159bpm", max: 159 },
+  { label: "Threshold", bpm: "160-166bpm", max: 166 },
+  { label: "VO2 Max",   bpm: ">167bpm",    max: 999 },
 ];
 export const heartRateZones = HR_ZONES.map((z, i) => {
   const prevMax = i === 0 ? 0 : HR_ZONES[i - 1].max;
