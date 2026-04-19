@@ -157,6 +157,7 @@ function applyFilter(
   const matched = rows.filter((r) => {
     if (filter.kind === "country") return r.location.countryCode === filter.code;
     if (filter.kind === "state") return r.location.region === filter.code;
+    if (filter.kind === "city") return r.location.city === filter.code;
     return true;
   });
   return matched.map((r, i) => ({ ...r, rank: i + 1 }));

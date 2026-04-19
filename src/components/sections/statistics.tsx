@@ -5,37 +5,15 @@ import { RadarChart } from "@/components/charts/radar-chart";
 import { DensityChart } from "@/components/charts/density-chart";
 import { HorizontalBars } from "@/components/charts/horizontal-bars";
 import {
-  Cloud,
-  Sun,
-  CloudRain,
-  CloudSnow,
-  CloudFog,
-  CloudLightning,
-  LucideIcon,
-} from "lucide-react";
-import {
   annualMileage,
   avgByWeekday,
-  equipment,
   heartRateZones,
   paceDistribution,
   runDistances,
-  temperatureBuckets,
-  temperatureRanges,
   treadmillVsOutdoor,
-  weatherConditions,
   workoutByTime,
 } from "@/lib/mock-data";
 import { formatPace } from "@/lib/format";
-
-const WEATHER_ICONS: Record<string, LucideIcon> = {
-  sun: Sun,
-  cloud: Cloud,
-  "cloud-rain": CloudRain,
-  snowflake: CloudSnow,
-  "cloud-fog": CloudFog,
-  "cloud-lightning": CloudLightning,
-};
 
 export function Statistics() {
   return (
@@ -116,55 +94,9 @@ export function Statistics() {
           <HorizontalBars data={heartRateZones.map((z) => ({ label: z.label, sub: z.bpm, value: z.count }))} />
         </ChartCard>
 
-        <ChartCard
-          title="EQUIPMENT"
-          caption="retired shoes, stacked by lifetime distance"
-        >
-          <HorizontalBars data={equipment.map((e) => ({ label: e.model, value: e.km }))} height={220} />
-        </ChartCard>
-      </div>
-
-      <div className="grid gap-12 md:grid-cols-2 mb-16">
-        <ChartCard
-          title="TEMPERATURE"
-          caption="count of runs bucketed by ambient temperature"
-        >
-          <BarChart
-            data={temperatureBuckets.map((b) => ({
-              label: b.label,
-              value: b.count,
-            }))}
-            yTicks={[0, 250, 500, 750, 1000]}
-            width={540}
-          />
-          <div className="grid grid-cols-9 gap-1 text-[9px] font-mono-tamzen text-neutral-500 mt-1 w-full">
-            {temperatureRanges.map((r) => (
-              <div key={r} className="text-center">
-                {r}
-              </div>
-            ))}
-          </div>
-        </ChartCard>
-
-        <ChartCard title="WEATHER CONDITIONS" caption="count of runs by weather condition">
-          <div className="flex items-end justify-around gap-3 w-full max-w-md">
-            {weatherConditions.map((w) => {
-              const Icon = WEATHER_ICONS[w.icon] ?? Cloud;
-              const max = Math.max(...weatherConditions.map((x) => x.count));
-              const h = (w.count / max) * 140;
-              return (
-                <div key={w.label} className="flex flex-col items-center gap-2">
-                  <div className="font-mono-tamzen text-[10px] text-neutral-400">{w.count}</div>
-                  <div style={{ height: h }} className="w-10 bg-neutral-200" />
-                  <Icon size={16} className="text-neutral-300" />
-                  <div className="font-mono-tamzen text-[10px] text-neutral-500 uppercase">
-                    {w.label}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </ChartCard>
+        {/* EQUIPMENT: hidden — no shoe data in GPX files. */}
+        {/* TEMPERATURE + WEATHER CONDITIONS: hidden — GPX has no ambient
+            temp or sky cover. Would need a weather-API join at pull time. */}
       </div>
     </section>
   );

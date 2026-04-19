@@ -1,10 +1,10 @@
 "use client";
 
-import { countriesVisited, usStatesVisited } from "@/lib/mock-data";
+import { countriesVisited, usStatesVisited, nycBoroughsVisited } from "@/lib/mock-data";
 import { DataTable } from "@/components/primitives/data-table";
 import type { GeoRow } from "@/types/activity";
 import { formatNumber } from "@/lib/format";
-import { toggleCountry, toggleState, useGeoFilter } from "@/lib/geo-filter";
+import { toggleCity, toggleCountry, toggleState, useGeoFilter } from "@/lib/geo-filter";
 
 // ISO 3166 alpha-2 → regional indicator emoji. Antarctica (AQ) has no flag,
 // so we draw a snowflake there.
@@ -38,6 +38,12 @@ const stateCols = [
   countryCols[2],
 ];
 
+const boroughCols = [
+  { key: "name", header: "BOROUGH", cell: (r: GeoRow) => r.name },
+  countryCols[1],
+  countryCols[2],
+];
+
 export function Geography() {
   const filter = useGeoFilter();
   const half = Math.ceil(usStatesVisited.length / 2);
@@ -45,8 +51,9 @@ export function Geography() {
   const right = usStatesVisited.slice(half);
   const hasCountries = countriesVisited.length > 0;
   const hasStates = usStatesVisited.length > 0;
+  const hasBoroughs = nycBoroughsVisited.length > 0;
   const hasUnknown = countriesVisited.some((r) => r.code === "??");
-  if (!hasCountries && !hasStates) return null;
+  if (!hasCountries && !hasStates && !hasBoroughs) return null;
 
   const activeCountryIdx = (rows: GeoRow[]) =>
     filter.kind === "country"
@@ -54,6 +61,10 @@ export function Geography() {
       : -1;
   const activeStateIdx = (rows: GeoRow[]) =>
     filter.kind === "state"
+      ? rows.findIndex((r) => r.code === filter.code)
+      : -1;
+  const activeCityIdx = (rows: GeoRow[]) =>
+    filter.kind === "city"
       ? rows.findIndex((r) => r.code === filter.code)
       : -1;
 
@@ -95,7 +106,7 @@ export function Geography() {
       ) : null}
 
       {hasStates ? (
-        <div className="mb-16">
+        <div className="mb-8">
           <h3 className="text-center font-sans text-lg font-bold text-neutral-100 mb-1">
             US STATES VISITED
           </h3>
@@ -111,6 +122,22 @@ export function Geography() {
               columns={stateCols}
               highlightedIndex={activeStateIdx(right)}
               onRowClick={(row) => toggleState(row.code ?? "", row.name)}
+            />
+          </div>
+        </div>
+      ) : null}
+
+      {hasBoroughs ? (
+        <div className="mb-16">
+          <h3 className="text-center font-sans text-lg font-bold text-neutral-100 mb-1">
+            NYC BOROUGHS VISITED
+          </h3>
+          <div className="mx-auto max-w-3xl">
+            <DataTable
+              rows={nycBoroughsVisited}
+              columns={boroughCols}
+              highlightedIndex={activeCityIdx(nycBoroughsVisited)}
+              onRowClick={(row) => toggleCity(row.code ?? "", row.name)}
             />
           </div>
         </div>
