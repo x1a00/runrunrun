@@ -1,14 +1,29 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# site.yaml — all user-editable text for the site.
+# Edit this file, commit + push → GitHub Actions rebuilds in ~90 seconds.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── HEADER ────────────────────────────────────────────────────────────────────
+# The large title shown at the top of the page.
+# Supports: plain text, any length.
 header:
   name: "RUN RUN RUN"
 
+# ── FOREWORD ──────────────────────────────────────────────────────────────────
+# Prose shown below the streak hero numbers.
+# Supports: any number of paragraphs (add or remove "- ..." lines freely).
+# Inline `backtick code` is rendered in a monospace style.
+# No bold, italic, or links — plain text + backtick only.
 foreword:
   - "My running log "
+  - "To be hallucinated... "
   - "Fulfilled by Claude "
 
-# Footer supports multiple lines. Each line can have:
-#   text: plain text
-#   url:  makes it a clickable link (optional)
-# Lines render top-to-bottom, one per row.
+# ── FOOTER ────────────────────────────────────────────────────────────────────
+# Lines shown at the bottom of the page.
+# Supports: any number of lines. Each line has:
+#   text: (required) the display text
+#   url:  (optional) makes the line a clickable link
 footer:
-  - text: "Cloned from nodaysoff.run"
+  - text: "Replicated from nodaysoff.run"
     url: "https://nodaysoff.run"

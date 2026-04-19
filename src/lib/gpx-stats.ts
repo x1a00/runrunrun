@@ -3,7 +3,18 @@
 // and the site picks them up automatically. Everything is metric, all
 // durations use MOVING time (stops excluded).
 
+import { readFileSync, existsSync } from "node:fs";
+import { join } from "node:path";
 import { gpxSummaries, type GpxSummary } from "./gpx-processed";
+
+interface StravaMeta {
+  tempC?: number;
+  photoPath?: string;
+}
+const META_PATH = join(process.cwd(), "public", "strava-meta.json");
+const stravaMeta: Record<string, StravaMeta> = existsSync(META_PATH)
+  ? (JSON.parse(readFileSync(META_PATH, "utf8")) as Record<string, StravaMeta>)
+  : {};
 import type {
   AnnualMileage,
   GeoRow,
@@ -314,6 +325,7 @@ export const streakStats: StreakStats = {
 
 function toNotableRun(t: GpxSummary, rank: number, weather: WeatherCondition): NotableRun {
   const d = dateOf(t);
+  const meta = stravaMeta[t.id] ?? {};
   return {
     rank,
     date: niceDate(d),
@@ -321,12 +333,13 @@ function toNotableRun(t: GpxSummary, rank: number, weather: WeatherCondition): N
     movingSec: t.stats.movingSec,
     paceSecPerKm: t.stats.paceSecPerKm ?? 0,
     elevationM: t.stats.elevationM,
-    tempC: 15, // no temp in GPX — neutral placeholder for the °C tile
+    ...(meta.tempC != null ? { tempC: meta.tempC } : {}),
     weather,
     title: t.name,
     location: locationFor(t),
     gpxId: t.id,
     gpxPath: `/gpx/${t.id}.gpx`,
+    ...(meta.photoPath != null ? { photoPath: meta.photoPath } : {}),
   };
 }
 
@@ -559,7 +572,12 @@ export const usStatesVisited: GeoRow[] = (() => {
       days: v.days.size,
       km: +v.km.toFixed(1),
     }))
-    .sort((a, b) => b.km - a.km);
+    // Sort by km desc, but always pin NJ last.
+    .sort((a, b) => {
+      if (a.code === "NJ") return 1;
+      if (b.code === "NJ") return -1;
+      return b.km - a.km;
+    });
 })();
 
 // NYC boroughs — aggregated by city when a run lands in NY state. Lets us

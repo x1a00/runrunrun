@@ -22,6 +22,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
 const ENV_PATH = join(ROOT, ".env.local");
 const GPX_DIR = join(ROOT, "public", "gpx");
+const PHOTOS_DIR = join(ROOT, "public", "photos");
+const META_PATH = join(ROOT, "public", "strava-meta.json");
 
 // ──────────────────────────────────────────────────────────────── env ──
 function parseEnv(src) {
@@ -202,9 +204,43 @@ function slugify(s, id) {
   return `${base || "run"}-${id}.gpx`;
 }
 
+// ─────────────────────────────────────────────────── photos + meta ──
+async function fetchFirstPhoto(activityId, token) {
+  const url = new URL(`https://www.strava.com/api/v3/activities/${activityId}/photos`);
+  url.searchParams.set("photo_sources", "true");
+  url.searchParams.set("size", "800");
+  const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+  if (!res.ok) {
+    throw new Error(`Photos API ${activityId} → ${res.status}: ${await res.text()}`);
+  }
+  const photos = await res.json();
+  if (!Array.isArray(photos) || photos.length === 0) return null;
+  const urls = photos[0].urls;
+  if (!urls) return null;
+  const photoUrl = urls["800"] ?? urls[Object.keys(urls)[0]];
+  return photoUrl ?? null;
+}
+
+async function downloadPhoto(photoUrl, destPath) {
+  const res = await fetch(photoUrl); // no auth header — Strava CDN URL is pre-signed
+  if (!res.ok) throw new Error(`Download failed ${res.status}: ${photoUrl}`);
+  const buf = await res.arrayBuffer();
+  writeFileSync(destPath, Buffer.from(buf));
+}
+
+function loadMeta() {
+  if (!existsSync(META_PATH)) return {};
+  return JSON.parse(readFileSync(META_PATH, "utf8"));
+}
+
+function saveMeta(meta) {
+  writeFileSync(META_PATH, JSON.stringify(meta, null, 2));
+}
+
 // ───────────────────────────────────────────────────────────── main ──
 (async () => {
   if (!existsSync(GPX_DIR)) mkdirSync(GPX_DIR, { recursive: true });
+  if (!existsSync(PHOTOS_DIR)) mkdirSync(PHOTOS_DIR, { recursive: true });
   const token = await refreshTokenIfNeeded();
 
   const acts = await listAllRuns(token);
@@ -231,11 +267,16 @@ function slugify(s, id) {
 
   let written = 0;
   let skipped = 0;
+  // Activities for which we still need to fetch/check metadata (all runs)
+  const metaQueue = [];
+
   for (const a of longRuns) {
     const filename = slugify(a.name, a.id);
     const dest = join(GPX_DIR, filename);
+    const stem = filename.replace(/\.gpx$/, "");
     if (existsSync(dest)) {
       skipped++;
+      metaQueue.push({ a, stem });
       continue;
     }
     console.log(`• fetching streams for "${a.name}" (${a.id})...`);
@@ -254,6 +295,7 @@ function slugify(s, id) {
       writeFileSync(dest, gpx);
       written++;
       console.log(`  ↳ wrote ${filename}`);
+      metaQueue.push({ a, stem });
     } catch (e) {
       console.error(`  ↳ failed: ${e.message}`);
     }
@@ -262,6 +304,52 @@ function slugify(s, id) {
   }
 
   console.log(`\n${written} new GPX files, ${skipped} already present`);
+
+  // ── Metadata + photos ─────────────────────────────────────────────
+  const existingMeta = loadMeta();
+  let metaChanged = false;
+
+  for (const { a, stem } of metaQueue) {
+    const record = existingMeta[stem] ?? {};
+    let changed = false;
+
+    // Temperature
+    if (a.average_temp != null && record.tempC == null) {
+      record.tempC = a.average_temp;
+      changed = true;
+    }
+
+    // Photo
+    if (a.total_photo_count > 0 && record.photoPath == null) {
+      const photoDest = join(PHOTOS_DIR, `${stem}.jpg`);
+      if (!existsSync(photoDest)) {
+        try {
+          await new Promise((r) => setTimeout(r, 300));
+          const photoUrl = await fetchFirstPhoto(a.id, token);
+          if (photoUrl) {
+            await downloadPhoto(photoUrl, photoDest);
+            console.log(`  ↳ photo saved for ${stem}`);
+          }
+        } catch (e) {
+          console.error(`  ↳ photo failed for ${stem}: ${e.message}`);
+        }
+      }
+      if (existsSync(photoDest)) {
+        record.photoPath = `/photos/${stem}.jpg`;
+        changed = true;
+      }
+    }
+
+    if (changed) {
+      existingMeta[stem] = record;
+      metaChanged = true;
+    }
+  }
+
+  if (metaChanged) {
+    saveMeta(existingMeta);
+    console.log("• wrote public/strava-meta.json");
+  }
 
   if (written > 0) {
     console.log("• running process-gpx.mjs...");

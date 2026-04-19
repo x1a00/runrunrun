@@ -46,13 +46,17 @@ export interface NotableRun {
   movingSec: number;
   paceSecPerKm: number;
   elevationM: number;
-  tempC: number;
+  tempC?: number;
   weather: WeatherCondition;
   title?: string;
   location: ActivityLocation;
   gpxPath?: string;
   /** Key into `gpxTracks` when this run has a real GPS trace. */
   gpxId?: string;
+  /** Relative path to the activity photo, e.g. "/photos/afternoon-run-123.jpg" */
+  photoPath?: string;
+  /** Wind speed in km/h (future: from weather API) */
+  windKph?: number;
   // Small elevation+pace profile series (sampled every ~0.5 km)
   profile?: { km: number; m: number; paceSecPerKm: number }[];
 }

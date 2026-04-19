@@ -334,10 +334,13 @@ function DetailsPanel({ run }: { run: NotableRun }) {
       </div>
       {run.weather ? (
         <div className="flex items-center gap-3">
+          <Icon className="text-neutral-300" size={20} />
           <div>
             <div className="text-xs uppercase text-neutral-500">{run.weather}</div>
+            {run.tempC != null ? (
+              <div className="text-sm text-neutral-300">{Math.round(run.tempC)}°C</div>
+            ) : null}
           </div>
-          <Icon className="text-neutral-300" size={20} />
         </div>
       ) : null}
       <div>
@@ -350,6 +353,16 @@ function DetailsPanel({ run }: { run: NotableRun }) {
           {run.location.country.toUpperCase()}
         </div>
       </div>
+      {run.photoPath ? (
+        <a
+          href={`/runrunrun${run.photoPath}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-sans font-bold text-neutral-100 underline hover:text-neutral-300 text-sm"
+        >
+          PHOTO
+        </a>
+      ) : null}
     </div>
   );
 }
