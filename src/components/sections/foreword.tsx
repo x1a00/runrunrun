@@ -1,15 +1,12 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { siteContent } from "@/lib/content";
 
-// Foreword copy lives in content/foreword.md at the repo root so it can
-// be edited without touching JSX. Server component reads it at build time;
+// Foreword copy lives in content/site.yaml under the `foreword` key — an
+// array of paragraph strings. Edit that file to update the text without
+// touching JSX. This server component reads the parsed content at build time;
 // each push rebuilds the static export with the latest text.
 //
-// Markdown support here is intentionally minimal: paragraphs split on blank
-// lines, `inline code` → <code>. If you need headings, lists, or links,
-// swap to a proper markdown lib (e.g. `marked`).
-const FOREWORD_PATH = join(process.cwd(), "content", "foreword.md");
-const raw = readFileSync(FOREWORD_PATH, "utf8").trim();
+// Inline `code` spans are supported: wrap text in backticks within a string.
+// For richer markup, consider a dedicated markdown key in site.yaml.
 
 function renderInline(text: string): React.ReactNode[] {
   const parts = text.split(/(`[^`]+`)/g);
@@ -26,7 +23,7 @@ function renderInline(text: string): React.ReactNode[] {
 }
 
 export function Foreword() {
-  const paragraphs = raw.split(/\n\s*\n/);
+  const paragraphs = siteContent.foreword;
   return (
     <section className="text-center mb-16">
       <h2 className="font-sans text-xl font-medium uppercase tracking-wide text-neutral-100 mb-8">
