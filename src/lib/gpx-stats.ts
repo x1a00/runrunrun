@@ -70,20 +70,14 @@ interface Region {
 }
 
 const REGIONS: Region[] = [
-  // NYC boroughs — specific boxes before wider city/state fallback so a
-  // run in Astoria reports "Queens" instead of just "NY".
-  // Outer boroughs are listed BEFORE Manhattan so that runs whose start point
-  // falls in an overlapping zone (e.g. Brooklyn Bridge Park, LIC waterfront)
-  // resolve to the outer borough. Manhattan's eastern edge is tightened to
-  // -73.93 so the East River's east bank (LIC, Greenpoint, Williamsburg,
-  // DUMBO) doesn't leak into Manhattan. Trade-off: a sliver of east Harlem
-  // and Inwood north of ~125th is excluded but those runs fall back to
-  // "NY" rather than being misclassified.
+  // NYC outer boroughs — listed before the Manhattan special-case logic
+  // (handled in locationFor via polyline, not a bbox) so that runs with
+  // centroids deep inside an outer borough are caught here first.
+  // Manhattan is intentionally absent; see manhattanEastLon() below.
   { countryCode: "US", country: "United States", region: "NY", city: "Brooklyn",      bbox: { minLat: 40.55, maxLat: 40.74, minLon: -74.05, maxLon: -73.83 } },
   { countryCode: "US", country: "United States", region: "NY", city: "Queens",        bbox: { minLat: 40.54, maxLat: 40.80, minLon: -73.96, maxLon: -73.70 } },
   { countryCode: "US", country: "United States", region: "NY", city: "Bronx",         bbox: { minLat: 40.80, maxLat: 40.92, minLon: -73.93, maxLon: -73.76 } },
   { countryCode: "US", country: "United States", region: "NY", city: "Staten Island", bbox: { minLat: 40.48, maxLat: 40.65, minLon: -74.27, maxLon: -74.05 } },
-  { countryCode: "US", country: "United States", region: "NY", city: "Manhattan",     bbox: { minLat: 40.70, maxLat: 40.88, minLon: -74.02, maxLon: -73.93 } },
   // NY-state fallback for upstate / Long Island runs outside the five boroughs.
   { countryCode: "US", country: "United States", region: "NY",                        bbox: { minLat: 40.48, maxLat: 45.02, minLon: -79.76, maxLon: -71.85 } },
   { countryCode: "US", country: "United States", region: "CA", city: "San Diego",     bbox: { minLat: 32.60, maxLat: 33.15, minLon: -117.40, maxLon: -116.85 } },
@@ -135,15 +129,79 @@ const REGIONS: Region[] = [
   { countryCode: "ZA", country: "South Africa",  bbox: { minLat: -35, maxLat: -22.1, minLon: 16.5, maxLon: 32.9 } },
 ];
 
+// Piecewise approximation of Manhattan's EAST shoreline (East River edge).
+// Each entry is [latitude, easternmost_land_longitude] going south→north.
+// A centroid west of this line is on Manhattan land; east of it is in the
+// East River (and should be assigned to Queens or Brooklyn, not Manhattan).
+// Source: traced against OpenStreetMap coastline data.
+const MANHATTAN_EAST_SHORE: [number, number][] = [
+  [40.700, -74.010], // South tip / Battery Park
+  [40.702, -73.998], // Staten Island Ferry terminal
+  [40.707, -73.994], // Whitehall / Stone St
+  [40.712, -73.989], // Brooklyn Bridge Manhattan anchorage
+  [40.719, -73.979], // Manhattan Bridge approach
+  [40.727, -73.977], // Williamsburg Bridge approach
+  [40.737, -73.974], // Lower East Side / Delancey
+  [40.750, -73.971], // East Village / 14th St
+  [40.759, -73.967], // Stuyvesant Cove / 23rd St
+  [40.769, -73.960], // Queens-Midtown Tunnel portal / 34th St
+  [40.775, -73.954], // UN Plaza / 42nd St
+  [40.783, -73.948], // Sutton Place / 53rd St
+  [40.793, -73.943], // Lenox Hill / 72nd St
+  [40.803, -73.938], // Carl Schurz Park / 86th St
+  [40.814, -73.934], // East Harlem / 96th St
+  [40.826, -73.930], // East Harlem / 110th St
+  [40.841, -73.926], // RFK Bridge approach / 125th St
+  [40.857, -73.920], // 145th St
+  [40.869, -73.916], // 175th St
+  [40.878, -73.910], // Inwood / north tip
+];
+
+// Returns the easternmost longitude that is still Manhattan land at a given
+// latitude. Points east of this value are in the East River.
+function manhattanEastLon(lat: number): number {
+  const s = MANHATTAN_EAST_SHORE;
+  if (lat <= s[0][0]) return s[0][1];
+  if (lat >= s[s.length - 1][0]) return s[s.length - 1][1];
+  for (let i = 0; i < s.length - 1; i++) {
+    const [lat0, lon0] = s[i];
+    const [lat1, lon1] = s[i + 1];
+    if (lat >= lat0 && lat <= lat1) {
+      const t = (lat - lat0) / (lat1 - lat0);
+      return lon0 + t * (lon1 - lon0);
+    }
+  }
+  return s[0][1];
+}
+
 function locationFor(t: GpxSummary): ActivityLocation {
-  // Prefer the track's first GPS point (where the run actually started) over
-  // the bbox centroid. Bridge/waterfront runs routinely have centroids that
-  // drift into the wrong borough (e.g. a LIC→Manhattan→LIC loop has its
-  // centroid in the East River). The start point is where you stood when you
-  // hit "go" and is the most honest answer to "which borough is this run?".
+  // Classify by track centroid (bbox midpoint). This is the correct signal
+  // for "which borough does this run belong to" — a run that spends most of
+  // its distance in Queens will have its centroid in Queens even if it briefly
+  // crosses a bridge into Manhattan.
   const { minLat, maxLat, minLon, maxLon } = t.stats.bbox;
-  const lat = t.stats.startLat ?? (minLat + maxLat) / 2;
-  const lon = t.stats.startLon ?? (minLon + maxLon) / 2;
+  const lat = (minLat + maxLat) / 2;
+  const lon = (minLon + maxLon) / 2;
+
+  // --- Manhattan / East River special case ---
+  // Manhattan is not in REGIONS because a simple bbox would swallow the East
+  // River and misclassify LIC / Greenpoint / DUMBO runs. Instead we check the
+  // actual land boundary with a piecewise shoreline polyline.
+  const MAN_LAT_MIN = 40.700, MAN_LAT_MAX = 40.880;
+  const MAN_LON_MIN = -74.025; // Hudson River / NJ boundary (generous)
+  if (lat >= MAN_LAT_MIN && lat <= MAN_LAT_MAX && lon >= MAN_LON_MIN) {
+    const eastEdge = manhattanEastLon(lat);
+    if (lon <= eastEdge) {
+      // On Manhattan island land
+      return { country: "United States", countryCode: "US", region: "NY", city: "Manhattan", lat, lon };
+    }
+    // East of the shore → East River water. Assign to the borough whose
+    // waterfront faces this point. The Queens/Brooklyn border meets the East
+    // River at Newtown Creek (~40.726 N). North = Queens, south = Brooklyn.
+    const city = lat > 40.726 ? "Queens" : "Brooklyn";
+    return { country: "United States", countryCode: "US", region: "NY", city, lat, lon };
+  }
+
   for (const r of REGIONS) {
     if (
       lat >= r.bbox.minLat && lat <= r.bbox.maxLat &&
