@@ -10,7 +10,7 @@ const jost = Jost({
 });
 
 export const metadata: Metadata = {
-  title: "no days off",
+  title: "run run run",
   description: "a running log derived directly from GPX files.",
 };
 
