@@ -10,7 +10,6 @@ import {
   heartRateZones,
   paceDistribution,
   runDistances,
-  treadmillVsOutdoor,
   workoutByTime,
 } from "@/lib/mock-data";
 import { formatPace } from "@/lib/format";
@@ -52,30 +51,17 @@ export function Statistics() {
         </ChartCard>
 
         <ChartCard
-          title="TREADMILL VS OUTDOOR"
-          caption="split between outdoor and treadmill runs"
+          title="RUN DISTANCES"
+          caption="count of runs bucketed by distance"
         >
-          <HorizontalBars
-            data={[
-              { label: "Outdoor", value: treadmillVsOutdoor.outdoor },
-              { label: "Treadmill", value: treadmillVsOutdoor.treadmill },
-            ]}
-            height={120}
+          {/* No hardcoded yTicks — auto-normalises to the largest bucket */}
+          <BarChart
+            data={runDistances.map((b) => ({ label: b.label, value: b.count }))}
           />
         </ChartCard>
       </div>
 
-      <div className="grid gap-12 md:grid-cols-2 xl:grid-cols-4 mb-16">
-        <ChartCard
-          title="RUN DISTANCES"
-          caption="count of runs bucketed by distance"
-        >
-          <BarChart
-            data={runDistances.map((b) => ({ label: b.label, value: b.count }))}
-            yTicks={[0, 300, 600, 900, 1200, 1500]}
-          />
-        </ChartCard>
-
+      <div className="grid gap-12 md:grid-cols-2 xl:grid-cols-2 mb-16">
         <ChartCard
           title="PACE DISTRIBUTION"
           caption="distribution of average pace across runs"

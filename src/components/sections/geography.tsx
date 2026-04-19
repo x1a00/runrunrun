@@ -103,17 +103,10 @@ export function Geography() {
 
   return (
     <section>
-      <h2 className="text-center font-sans text-xl font-medium uppercase tracking-wide text-neutral-100 mb-2">
-        GEOGRAPHY
-      </h2>
-      <p className="text-center text-xs italic text-neutral-500 font-mono-tamzen mb-8">
-        click any row to filter Notable Runs by that country, state, or borough
-      </p>
-
       <div className="mb-8">
-        <h3 className="text-center font-sans text-lg font-bold text-neutral-100 mb-1">
-          COUNTRIES VISITED
-        </h3>
+        <h2 className="text-center font-sans text-xl font-medium uppercase tracking-wide text-neutral-100 mb-1">
+          WHERE I RAN
+        </h2>
         <div className="mx-auto max-w-3xl">
           <DataTable
             rows={rows}
