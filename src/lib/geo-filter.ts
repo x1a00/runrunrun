@@ -9,7 +9,8 @@ import { useSyncExternalStore } from "react";
 export type GeoFilter =
   | { kind: "none" }
   | { kind: "country"; code: string; name: string }
-  | { kind: "state"; code: string; name: string };
+  | { kind: "state"; code: string; name: string }
+  | { kind: "city"; code: string; name: string };
 
 let current: GeoFilter = { kind: "none" };
 const listeners = new Set<() => void>();
@@ -41,6 +42,14 @@ export function toggleState(code: string, name: string) {
     setGeoFilter({ kind: "none" });
   } else {
     setGeoFilter({ kind: "state", code, name });
+  }
+}
+
+export function toggleCity(code: string, name: string) {
+  if (current.kind === "city" && current.code === code) {
+    setGeoFilter({ kind: "none" });
+  } else {
+    setGeoFilter({ kind: "city", code, name });
   }
 }
 

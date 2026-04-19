@@ -2,7 +2,16 @@ import type { StreakYearHeatmap } from "@/types/activity";
 import { formatNumber } from "@/lib/format";
 
 const DOW_LABELS = ["M", "T", "W", "T", "F", "S", "S"];
-const MONTH_LABELS = ["Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
+const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+// Streak years don't align with calendar years — generate the 12-month
+// label row dynamically from the year's start date so the axis matches
+// whatever month the streak began.
+function monthLabelsFrom(startIso: string): string[] {
+  const start = new Date(startIso + "T00:00:00Z");
+  const base = start.getUTCMonth();
+  return Array.from({ length: 12 }, (_, i) => MONTH_NAMES[(base + i) % 12]);
+}
 
 // Map km -> greyscale fill. Empty -> neutral-900.
 function cellFill(km: number, max: number) {
@@ -71,7 +80,7 @@ export function HeatmapYear({ data }: { data: StreakYearHeatmap }) {
             <title>{`${c.date} — ${c.km.toFixed(2)} km`}</title>
           </rect>
         ))}
-        {MONTH_LABELS.map((m, i) => {
+        {monthLabelsFrom(data.cells[0]?.date ?? "2024-01-01").map((m, i) => {
           const x = labelW + (i * (weeks - 1) / 11) * (cellSize + gap) + cellSize;
           return (
             <text

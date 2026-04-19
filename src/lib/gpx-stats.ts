@@ -70,8 +70,15 @@ interface Region {
 }
 
 const REGIONS: Region[] = [
-  { countryCode: "US", country: "United States", region: "NY", city: "Brooklyn",      bbox: { minLat: 40.55, maxLat: 40.80, minLon: -74.05, maxLon: -73.83 } },
+  // NYC boroughs — specific boxes before wider city/state fallback so a
+  // run in Astoria reports "Queens" instead of just "NY".
   { countryCode: "US", country: "United States", region: "NY", city: "Manhattan",     bbox: { minLat: 40.70, maxLat: 40.88, minLon: -74.02, maxLon: -73.90 } },
+  { countryCode: "US", country: "United States", region: "NY", city: "Brooklyn",      bbox: { minLat: 40.55, maxLat: 40.74, minLon: -74.05, maxLon: -73.83 } },
+  { countryCode: "US", country: "United States", region: "NY", city: "Queens",        bbox: { minLat: 40.54, maxLat: 40.80, minLon: -73.96, maxLon: -73.70 } },
+  { countryCode: "US", country: "United States", region: "NY", city: "Bronx",         bbox: { minLat: 40.78, maxLat: 40.92, minLon: -73.93, maxLon: -73.76 } },
+  { countryCode: "US", country: "United States", region: "NY", city: "Staten Island", bbox: { minLat: 40.48, maxLat: 40.65, minLon: -74.27, maxLon: -74.05 } },
+  // NY-state fallback for upstate / Long Island runs outside the five boroughs.
+  { countryCode: "US", country: "United States", region: "NY",                        bbox: { minLat: 40.48, maxLat: 45.02, minLon: -79.76, maxLon: -71.85 } },
   { countryCode: "US", country: "United States", region: "CA", city: "San Diego",     bbox: { minLat: 32.60, maxLat: 33.15, minLon: -117.40, maxLon: -116.85 } },
   { countryCode: "US", country: "United States", region: "CA", city: "San Francisco", bbox: { minLat: 37.65, maxLat: 37.85, minLon: -122.55, maxLon: -122.35 } },
   { countryCode: "US", country: "United States", region: "CA", city: "Los Angeles",   bbox: { minLat: 33.70, maxLat: 34.35, minLon: -118.70, maxLon: -118.15 } },
@@ -79,13 +86,46 @@ const REGIONS: Region[] = [
   { countryCode: "US", country: "United States", region: "WA", city: "Seattle",       bbox: { minLat: 47.40, maxLat: 47.80, minLon: -122.50, maxLon: -122.20 } },
   { countryCode: "US", country: "United States", region: "MA", city: "Boston",        bbox: { minLat: 42.20, maxLat: 42.45, minLon: -71.20, maxLon: -70.95 } },
   // Fallback country boxes
+  // Mexico city-level (ordered more-specific → less-specific)
+  { countryCode: "MX", country: "Mexico", region: "CDMX",     city: "Mexico City",  bbox: { minLat: 19.18, maxLat: 19.60, minLon: -99.35, maxLon: -98.95 } },
+  { countryCode: "MX", country: "Mexico", region: "JAL",      city: "Guadalajara",  bbox: { minLat: 20.55, maxLat: 20.80, minLon: -103.55, maxLon: -103.20 } },
+  { countryCode: "MX", country: "Mexico", region: "Q.R.",     city: "Cancún",       bbox: { minLat: 20.90, maxLat: 21.30, minLon: -87.15, maxLon: -86.70 } },
+  { countryCode: "MX", country: "Mexico", region: "B.C.S.",   city: "Los Cabos",    bbox: { minLat: 22.80, maxLat: 23.20, minLon: -110.00, maxLon: -109.60 } },
+  { countryCode: "MX", country: "Mexico", region: "OAX",      city: "Oaxaca",       bbox: { minLat: 17.00, maxLat: 17.20, minLon: -96.80, maxLon: -96.60 } },
+  // Fallback country boxes
   { countryCode: "US", country: "United States", bbox: { minLat: 24.5, maxLat: 49.5, minLon: -125, maxLon: -66.5 } },
+  { countryCode: "MX", country: "Mexico",        bbox: { minLat: 14.5, maxLat: 32.7, minLon: -118.5, maxLon: -86.7 } },
   { countryCode: "FR", country: "France",        bbox: { minLat: 42.3, maxLat: 51.1, minLon: -5.2, maxLon: 9.6 } },
   { countryCode: "GB", country: "United Kingdom", bbox: { minLat: 49.8, maxLat: 58.7, minLon: -8.2, maxLon: 1.8 } },
   { countryCode: "DE", country: "Germany",       bbox: { minLat: 47.2, maxLat: 55.1, minLon: 5.8, maxLon: 15.1 } },
+  { countryCode: "ES", country: "Spain",         bbox: { minLat: 35.9, maxLat: 43.8, minLon: -9.4, maxLon: 4.4 } },
+  { countryCode: "IT", country: "Italy",         bbox: { minLat: 35.3, maxLat: 47.1, minLon: 6.6, maxLon: 18.6 } },
+  { countryCode: "PT", country: "Portugal",      bbox: { minLat: 36.8, maxLat: 42.2, minLon: -9.6, maxLon: -6.1 } },
+  { countryCode: "NL", country: "Netherlands",   bbox: { minLat: 50.7, maxLat: 53.7, minLon: 3.3, maxLon: 7.3 } },
+  { countryCode: "CH", country: "Switzerland",   bbox: { minLat: 45.8, maxLat: 47.9, minLon: 5.9, maxLon: 10.6 } },
+  { countryCode: "AT", country: "Austria",       bbox: { minLat: 46.3, maxLat: 49.1, minLon: 9.5, maxLon: 17.2 } },
+  { countryCode: "IE", country: "Ireland",       bbox: { minLat: 51.3, maxLat: 55.5, minLon: -10.7, maxLon: -5.4 } },
+  { countryCode: "NO", country: "Norway",        bbox: { minLat: 57.9, maxLat: 71.3, minLon: 4.4, maxLon: 31.1 } },
+  { countryCode: "SE", country: "Sweden",        bbox: { minLat: 55.1, maxLat: 69.1, minLon: 10.9, maxLon: 24.2 } },
   { countryCode: "JP", country: "Japan",         bbox: { minLat: 24, maxLat: 46, minLon: 122, maxLon: 146 } },
+  { countryCode: "KR", country: "South Korea",   bbox: { minLat: 33, maxLat: 38.7, minLon: 124.5, maxLon: 131.9 } },
+  { countryCode: "TW", country: "Taiwan",        bbox: { minLat: 21.8, maxLat: 25.4, minLon: 120, maxLon: 122.1 } },
+  { countryCode: "HK", country: "Hong Kong",     bbox: { minLat: 22.15, maxLat: 22.58, minLon: 113.83, maxLon: 114.42 } },
+  { countryCode: "SG", country: "Singapore",     bbox: { minLat: 1.13, maxLat: 1.48, minLon: 103.6, maxLon: 104.1 } },
+  { countryCode: "TH", country: "Thailand",      bbox: { minLat: 5.6, maxLat: 20.5, minLon: 97.3, maxLon: 105.7 } },
+  { countryCode: "VN", country: "Vietnam",       bbox: { minLat: 8.4, maxLat: 23.4, minLon: 102.1, maxLon: 109.5 } },
+  { countryCode: "ID", country: "Indonesia",     bbox: { minLat: -11, maxLat: 6, minLon: 95, maxLon: 141 } },
+  { countryCode: "PH", country: "Philippines",   bbox: { minLat: 4.6, maxLat: 21.1, minLon: 116.9, maxLon: 126.6 } },
+  { countryCode: "CN", country: "China",         bbox: { minLat: 18, maxLat: 53.6, minLon: 73.5, maxLon: 135.1 } },
+  { countryCode: "IN", country: "India",         bbox: { minLat: 6.7, maxLat: 35.5, minLon: 68.1, maxLon: 97.4 } },
   { countryCode: "CA", country: "Canada",        bbox: { minLat: 41.5, maxLat: 84, minLon: -141, maxLon: -52 } },
   { countryCode: "AU", country: "Australia",     bbox: { minLat: -44, maxLat: -10, minLon: 113, maxLon: 154 } },
+  { countryCode: "NZ", country: "New Zealand",   bbox: { minLat: -47.3, maxLat: -34.4, minLon: 166.4, maxLon: 178.6 } },
+  { countryCode: "BR", country: "Brazil",        bbox: { minLat: -33.8, maxLat: 5.3, minLon: -73.9, maxLon: -34.7 } },
+  { countryCode: "AR", country: "Argentina",     bbox: { minLat: -55, maxLat: -21.8, minLon: -73.5, maxLon: -53.6 } },
+  { countryCode: "CL", country: "Chile",         bbox: { minLat: -55.9, maxLat: -17.5, minLon: -75.7, maxLon: -66.4 } },
+  { countryCode: "PE", country: "Peru",          bbox: { minLat: -18.4, maxLat: -0.04, minLon: -81.3, maxLon: -68.7 } },
+  { countryCode: "ZA", country: "South Africa",  bbox: { minLat: -35, maxLat: -22.1, minLon: 16.5, maxLon: 32.9 } },
 ];
 
 function locationFor(t: GpxSummary): ActivityLocation {
@@ -233,9 +273,10 @@ export const annualMileage: AnnualMileage[] = annualYearNumbers.length
   ? annualYearNumbers.map((y) => ({ year: y, km: Math.round(annualMap.get(y) ?? 0) }))
   : [{ year: 1, km: 0 }];
 
-// Hour-of-day percentages (24 bins)
+// Hour-of-day percentages (24 bins). Use LOCAL time so the distribution
+// reflects when the user actually runs ("morning", "evening"), not UTC.
 const hourCounts = new Array<number>(24).fill(0);
-for (const t of tracks) hourCounts[dateOf(t).getUTCHours()] += 1;
+for (const t of tracks) hourCounts[dateOf(t).getHours()] += 1;
 const hourTotal = hourCounts.reduce((a, b) => a + b, 0) || 1;
 export const workoutByTime: number[] = hourCounts.map((c) => +((c / hourTotal) * 100).toFixed(1));
 
@@ -371,6 +412,29 @@ export const usStatesVisited: GeoRow[] = (() => {
     .map(([code, v]) => ({
       name: US_STATE_NAME[code] ?? code,
       code,
+      days: v.days.size,
+      km: +v.km.toFixed(1),
+    }))
+    .sort((a, b) => b.km - a.km);
+})();
+
+// NYC boroughs — aggregated by city when a run lands in NY state. Lets us
+// show a third drill-down table (country → state → borough) whenever the
+// user has NYC activity.
+export const nycBoroughsVisited: GeoRow[] = (() => {
+  const map = new Map<string, { km: number; days: Set<string> }>();
+  for (const t of tracks) {
+    const loc = locationFor(t);
+    if (loc.countryCode !== "US" || loc.region !== "NY" || !loc.city) continue;
+    const entry = map.get(loc.city) ?? { km: 0, days: new Set() };
+    entry.km += t.stats.distanceKm;
+    entry.days.add(isoDate(dateOf(t)));
+    map.set(loc.city, entry);
+  }
+  return [...map.entries()]
+    .map(([name, v]) => ({
+      name,
+      code: name, // use the borough name as the filter code
       days: v.days.size,
       km: +v.km.toFixed(1),
     }))

@@ -18,5 +18,6 @@ export {
   equipment,
   countriesVisited,
   usStatesVisited,
+  nycBoroughsVisited,
   streakYears,
 } from "./gpx-stats";
