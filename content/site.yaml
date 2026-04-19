@@ -5,6 +5,10 @@ foreword:
   - "My running log "
   - "Fulfilled by Claude "
 
+# Footer supports multiple lines. Each line can have:
+#   text: plain text
+#   url:  makes it a clickable link (optional)
+# Lines render top-to-bottom, one per row.
 footer:
-  label: "nodaysoff.run"
-  url: "https://nodaysoff.run"
+  - text: "Cloned from nodaysoff.run"
+    url: "https://nodaysoff.run"

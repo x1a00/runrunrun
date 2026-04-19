@@ -2,15 +2,17 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import yaml from "js-yaml";
 
+export interface FooterLine {
+  text: string;
+  url?: string;
+}
+
 export interface SiteContent {
   header: {
     name: string;
   };
   foreword: string[];
-  footer: {
-    label: string;
-    url: string;
-  };
+  footer: FooterLine[];
 }
 
 const CONTENT_PATH = join(process.cwd(), "content", "site.yaml");

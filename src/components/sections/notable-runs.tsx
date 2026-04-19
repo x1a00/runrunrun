@@ -9,6 +9,8 @@ import type { NotableRun, NotableRunCategory, WeatherCondition } from "@/types/a
 import { formatDuration, formatKm, formatNumber, formatPace } from "@/lib/format";
 import { GpxMap } from "@/components/charts/gpx-map";
 import { GpxElevation } from "@/components/charts/gpx-elevation";
+import { GpxPace } from "@/components/charts/gpx-pace";
+import { GpxHeartRate } from "@/components/charts/gpx-heartrate";
 import { prefetchTrack, useGpxTrack } from "@/lib/use-gpx-track";
 import { setGeoFilter, useGeoFilter } from "@/lib/geo-filter";
 
@@ -226,7 +228,7 @@ function Panel({ rows, category }: PanelProps) {
       </div>
       </div>
       <MapPanel run={selected} />
-      <ElevationPanel run={selected} />
+      <ChartsPanel run={selected} />
       <DetailsPanel run={selected} />
     </div>
   );
@@ -262,21 +264,46 @@ function MapPanel({ run }: { run: NotableRun }) {
   );
 }
 
-function ElevationPanel({ run }: { run: NotableRun }) {
+// Three vertically-stacked charts (elevation / pace / HR) that collectively
+// match the map height (aspect-square). Each chart gets exactly 1/3.
+// All share the same x-axis scale (km from start) — x-axis labels appear
+// only on the bottom (HR) chart so they don't repeat.
+function ChartsPanel({ run }: { run: NotableRun }) {
   const track = useGpxTrack(run.gpxId);
-  if (!track) {
-    return (
-      <div className="flex flex-col font-mono-tamzen text-xs text-neutral-500">
-        <div className="h-[100px] flex items-center justify-center">loading…</div>
+
+  const LABELS: Record<string, string> = {
+    elevation: "ELEVATION",
+    pace:      "PACE",
+    hr:        "HEART RATE",
+  };
+
+  const chartRow = (label: string, chart: React.ReactNode | null, isLast = false) => (
+    <div className={`flex-1 min-h-0 flex flex-col${isLast ? "" : " border-b border-neutral-800"}`}>
+      <div className="text-[8px] font-mono-tamzen text-neutral-600 px-1 pt-0.5 shrink-0">{label}</div>
+      <div className="flex-1 min-h-0">
+        {chart ?? (
+          <div className="w-full h-full flex items-center justify-center text-[9px] text-neutral-700 font-mono-tamzen">
+            no data
+          </div>
+        )}
       </div>
-    );
-  }
+    </div>
+  );
+
   return (
-    <div className="flex flex-col font-mono-tamzen text-xs text-neutral-400">
-      <GpxElevation track={track} />
-      <div className="mt-2 text-neutral-500">
-        Elevation · mean pace {formatPace(run.paceSecPerKm)}/km
-      </div>
+    // aspect-square makes total height = column width = same as map square
+    <div className="aspect-square flex flex-col bg-neutral-950 border border-neutral-900">
+      {!track ? (
+        <div className="flex-1 flex items-center justify-center text-[10px] font-mono-tamzen text-neutral-600">
+          loading…
+        </div>
+      ) : (
+        <>
+          {chartRow(LABELS.elevation, <GpxElevation track={track} />)}
+          {chartRow(LABELS.pace, <GpxPace track={track} />)}
+          {chartRow(LABELS.hr,   <GpxHeartRate track={track} showXAxis />, true)}
+        </>
+      )}
     </div>
   );
 }

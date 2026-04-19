@@ -6,6 +6,7 @@
 // the summary stats so the TS bundle stays small.
 
 export interface GpxPoint {
+  t: number | null; // seconds from track start (null if no timestamps in GPX)
   lat: number;
   lon: number;
   ele: number | null;

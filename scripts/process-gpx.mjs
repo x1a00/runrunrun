@@ -152,12 +152,14 @@ function processFile(path, id) {
   for (let i = 1; i < sampled.length; i++) {
     cumKm.push(cumKm[i - 1] + haversineKm(sampled[i - 1], sampled[i]));
   }
+  const t0Ms = sampled[0].time ? Date.parse(sampled[0].time) : null;
   const points = sampled.map((p, i) => ({
     lat: +p.lat.toFixed(6),
     lon: +p.lon.toFixed(6),
     ele: p.ele != null ? +p.ele.toFixed(1) : null,
     hr: p.hr ?? null,
     km: +cumKm[i].toFixed(3),
+    t: t0Ms != null && p.time ? Math.round((Date.parse(p.time) - t0Ms) / 1000) : null,
   }));
   return { id, name, stats, rawPointCount: all.length, points };
 }
@@ -262,6 +264,7 @@ function main() {
 // the summary stats so the TS bundle stays small.
 
 export interface GpxPoint {
+  t: number | null; // seconds from track start (null if no timestamps in GPX)
   lat: number;
   lon: number;
   ele: number | null;
