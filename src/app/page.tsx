@@ -16,8 +16,8 @@ export default function Home() {
       <StreakHero />
       <Foreword />
       <NotableRuns />
-      <Statistics />
       <Geography />
+      <Statistics />
       <DailyLog />
       <SiteFooter />
     </div>
