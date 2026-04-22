@@ -4432,5 +4432,28 @@ export const gpxSummaries: Record<string, GpxSummary> = {
         "maxLon": -73.989457
       }
     }
+  },
+  "afternoon-run-18204634143": {
+    "id": "afternoon-run-18204634143",
+    "name": "Afternoon Run",
+    "stats": {
+      "name": "Afternoon Run",
+      "distanceKm": 5.976,
+      "movingSec": 2075,
+      "elapsedSec": 2186,
+      "paceSecPerKm": 347,
+      "elevationM": 90,
+      "avgHr": 144,
+      "startTime": "2026-04-21T21:59:14.000Z",
+      "endTime": "2026-04-21T22:35:40.000Z",
+      "startLat": 40.748664,
+      "startLon": -73.95713,
+      "bbox": {
+        "minLat": 40.738213,
+        "maxLat": 40.748671,
+        "minLon": -73.962664,
+        "maxLon": -73.95713
+      }
+    }
   }
 };
