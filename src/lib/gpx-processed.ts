@@ -4455,5 +4455,28 @@ export const gpxSummaries: Record<string, GpxSummary> = {
         "maxLon": -73.95713
       }
     }
+  },
+  "evening-run-18219590640": {
+    "id": "evening-run-18219590640",
+    "name": "Evening Run",
+    "stats": {
+      "name": "Evening Run",
+      "distanceKm": 5.205,
+      "movingSec": 1880,
+      "elapsedSec": 2099,
+      "paceSecPerKm": 361,
+      "elevationM": 39,
+      "avgHr": 133,
+      "startTime": "2026-04-22T23:53:20.000Z",
+      "endTime": "2026-04-23T00:28:19.000Z",
+      "startLat": 40.747337,
+      "startLon": -73.957074,
+      "bbox": {
+        "minLat": 40.744777,
+        "maxLat": 40.748872,
+        "minLon": -73.959675,
+        "maxLon": -73.956626
+      }
+    }
   }
 };
