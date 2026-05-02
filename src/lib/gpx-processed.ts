@@ -4501,5 +4501,28 @@ export const gpxSummaries: Record<string, GpxSummary> = {
         "maxLon": -73.953071
       }
     }
+  },
+  "morning-run-18336532280": {
+    "id": "morning-run-18336532280",
+    "name": "Morning Run",
+    "stats": {
+      "name": "Morning Run",
+      "distanceKm": 3.374,
+      "movingSec": 1289,
+      "elapsedSec": 2994,
+      "paceSecPerKm": 382,
+      "elevationM": 40,
+      "avgHr": 127,
+      "startTime": "2026-05-01T16:59:59.000Z",
+      "endTime": "2026-05-01T17:49:53.000Z",
+      "startLat": 49.283845,
+      "startLon": -123.1097,
+      "bbox": {
+        "minLat": 49.283196,
+        "maxLat": 49.29043,
+        "minLon": -123.118748,
+        "maxLon": -123.108168
+      }
+    }
   }
 };
