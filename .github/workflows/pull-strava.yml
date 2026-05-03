@@ -1,33 +1,24 @@
 name: Pull Strava Activities
 
-# Refreshes GPX data from Strava without needing your laptop online.
-# Runs nightly (and on-demand) on GitHub's runners, commits any new GPX
-# files + regenerated processed data back to main, which then triggers
-# the deploy workflow automatically.
+# Pulls the newest Strava run every day at 6am Eastern (10:00 UTC).
+# Only fetches activities not yet on disk — stops the moment it sees a
+# known activity ID. Opens a PR for review instead of pushing to main.
 #
 # REQUIRED repository secrets (Settings → Secrets and variables → Actions):
 #   STRAVA_CLIENT_ID       — from strava.com/settings/api
 #   STRAVA_CLIENT_SECRET   — ditto
 #   STRAVA_ACCESS_TOKEN    — seed token with scope=activity:read_all
 #   STRAVA_REFRESH_TOKEN   — seed refresh token
-#
-# Strava rotates both tokens on every refresh. The workflow writes the
-# refreshed pair back as repository secrets via the GitHub API so the
-# next run works. That needs a PAT with `repo` + `admin:repo_hook` scope
-# stored as the secret STRAVA_ROTATE_PAT — create one at
-# github.com/settings/tokens and add it alongside the others.
-#
-# If you don't want token auto-rotation, skip the PAT and manually update
-# the two token secrets once a week — the access token expires in 6 hours
-# but the refresh token usually lasts months.
+#   STRAVA_ROTATE_PAT      — PAT with repo+workflow scope for token rotation
 
 on:
   schedule:
-    - cron: "17 6 * * *" # daily at 06:17 UTC
+    - cron: "0 10 * * *" # 6am Eastern (EDT = UTC-4)
   workflow_dispatch:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   pull:
@@ -59,25 +50,31 @@ jobs:
           HAS_PAT: ${{ secrets.STRAVA_ROTATE_PAT != '' }}
           GH_TOKEN: ${{ secrets.STRAVA_ROTATE_PAT }}
         run: |
-          # Read new tokens from .env.local and push them back as secrets.
           ACCESS=$(grep '^STRAVA_ACCESS_TOKEN=' .env.local | cut -d= -f2-)
           REFRESH=$(grep '^STRAVA_REFRESH_TOKEN=' .env.local | cut -d= -f2-)
           gh secret set STRAVA_ACCESS_TOKEN --body "$ACCESS" --repo "$GITHUB_REPOSITORY"
           gh secret set STRAVA_REFRESH_TOKEN --body "$REFRESH" --repo "$GITHUB_REPOSITORY"
 
       - name: Remove .env.local before committing
-        # Belt-and-suspenders: .env.local is gitignored, but make doubly
-        # sure no secrets leak into a commit.
         run: rm -f .env.local
 
-      - name: Commit and push updated data
+      - name: Open PR with new data (never pushes directly to main)
+        env:
+          GH_TOKEN: ${{ secrets.STRAVA_ROTATE_PAT || secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/gpx public/tracks public/photos public/strava-meta.json src/lib/gpx-processed.ts
           if git diff --staged --quiet; then
-            echo "No new activities."
-          else
-            git commit -m "data: refresh Strava activities ($(date -u +%Y-%m-%d))"
-            git push
+            echo "No new activities — nothing to PR."
+            exit 0
           fi
+          BRANCH="data/strava-$(date -u +%Y-%m-%d-%H%M)"
+          git checkout -b "$BRANCH"
+          git commit -m "data: new Strava activity ($(date -u +%Y-%m-%d))"
+          git push origin "$BRANCH"
+          gh pr create \
+            --title "data: new run $(date -u +%Y-%m-%d)" \
+            --body "New activity pulled from Strava. Merge to deploy." \
+            --base master \
+            --head "$BRANCH"

@@ -18,11 +18,12 @@ function codeToFlag(code?: string) {
   );
 }
 
-// State codes → local flag image path (relative, no basePath prefix).
+// State codes → flag image path. NEXT_PUBLIC_BASE_PATH is "" in dev, "/runrunrun" in prod.
 // Uses regional/cultural flags: Cascadia Republic for WA, Bear Flag for CA.
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 const STATE_FLAG_IMG: Record<string, string> = {
-  WA: "/runrunrun/images/flag-wa-cascadia.svg",
-  CA: "/runrunrun/images/flag-ca.svg",
+  WA: `${BASE}/images/flag-wa-cascadia.svg`,
+  CA: `${BASE}/images/flag-ca.svg`,
 };
 
 type Kind = "country" | "state" | "city";
@@ -73,7 +74,7 @@ export function Geography() {
           ) : r.level === 1 && r.code && STATE_FLAG_IMG[r.code] ? (
             // State with a flag image (Cascadia/WA, Bear Flag/CA, …)
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={STATE_FLAG_IMG[r.code]} alt="" aria-hidden className="h-3.5 w-auto opacity-80 inline-block" />
+            <img src={STATE_FLAG_IMG[r.code]} alt="" aria-hidden className="h-5 w-auto opacity-90 inline-block" />
           ) : (
             <span aria-hidden className="text-neutral-600">└</span>
           )}
@@ -104,7 +105,7 @@ export function Geography() {
   return (
     <section>
       <div className="mb-8">
-        <h2 className="text-center font-sans text-xl font-medium uppercase tracking-wide text-neutral-100 mb-1">
+        <h2 className="text-center font-sans text-xl font-medium uppercase tracking-wide text-neutral-100 mb-6">
           WHERE I RAN
         </h2>
         <div className="mx-auto max-w-3xl">
