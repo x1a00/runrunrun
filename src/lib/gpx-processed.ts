@@ -4524,5 +4524,51 @@ export const gpxSummaries: Record<string, GpxSummary> = {
         "maxLon": -123.108168
       }
     }
+  },
+  "vancouver-marathon-18364602479": {
+    "id": "vancouver-marathon-18364602479",
+    "name": "Vancouver Marathon",
+    "stats": {
+      "name": "Vancouver Marathon",
+      "distanceKm": 42.813,
+      "movingSec": 13984,
+      "elapsedSec": 14340,
+      "paceSecPerKm": 327,
+      "elevationM": 452,
+      "avgHr": 159,
+      "startTime": "2026-05-03T15:38:41.000Z",
+      "endTime": "2026-05-03T19:37:41.000Z",
+      "startLat": 49.243252,
+      "startLon": -123.109504,
+      "bbox": {
+        "minLat": 49.226152,
+        "maxLat": 49.314048,
+        "minLon": -123.2607,
+        "maxLon": -123.109504
+      }
+    }
+  },
+  "afternoon-run-18391236895": {
+    "id": "afternoon-run-18391236895",
+    "name": "Afternoon Run",
+    "stats": {
+      "name": "Afternoon Run",
+      "distanceKm": 2.769,
+      "movingSec": 1301,
+      "elapsedSec": 1399,
+      "paceSecPerKm": 470,
+      "elevationM": 80,
+      "avgHr": 132,
+      "startTime": "2026-05-05T21:05:30.000Z",
+      "endTime": "2026-05-05T21:28:49.000Z",
+      "startLat": 49.301299,
+      "startLon": -122.7468,
+      "bbox": {
+        "minLat": 49.29766,
+        "maxLat": 49.303038,
+        "minLon": -122.750362,
+        "maxLon": -122.734106
+      }
+    }
   }
 };
