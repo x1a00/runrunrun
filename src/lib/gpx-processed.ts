@@ -4524,5 +4524,97 @@ export const gpxSummaries: Record<string, GpxSummary> = {
         "maxLon": -123.108168
       }
     }
+  },
+  "vancouver-marathon-18364602479": {
+    "id": "vancouver-marathon-18364602479",
+    "name": "Vancouver Marathon",
+    "stats": {
+      "name": "Vancouver Marathon",
+      "distanceKm": 42.813,
+      "movingSec": 13984,
+      "elapsedSec": 14340,
+      "paceSecPerKm": 327,
+      "elevationM": 452,
+      "avgHr": 159,
+      "startTime": "2026-05-03T15:38:41.000Z",
+      "endTime": "2026-05-03T19:37:41.000Z",
+      "startLat": 49.243252,
+      "startLon": -123.109504,
+      "bbox": {
+        "minLat": 49.226152,
+        "maxLat": 49.314048,
+        "minLon": -123.2607,
+        "maxLon": -123.109504
+      }
+    }
+  },
+  "afternoon-run-18391236895": {
+    "id": "afternoon-run-18391236895",
+    "name": "Afternoon Run",
+    "stats": {
+      "name": "Afternoon Run",
+      "distanceKm": 2.769,
+      "movingSec": 1301,
+      "elapsedSec": 1399,
+      "paceSecPerKm": 470,
+      "elevationM": 80,
+      "avgHr": 132,
+      "startTime": "2026-05-05T21:05:30.000Z",
+      "endTime": "2026-05-05T21:28:49.000Z",
+      "startLat": 49.301299,
+      "startLon": -122.7468,
+      "bbox": {
+        "minLat": 49.29766,
+        "maxLat": 49.303038,
+        "minLon": -122.750362,
+        "maxLon": -122.734106
+      }
+    }
+  },
+  "lunch-run-18444210432": {
+    "id": "lunch-run-18444210432",
+    "name": "Lunch Run",
+    "stats": {
+      "name": "Lunch Run",
+      "distanceKm": 4.709,
+      "movingSec": 2142,
+      "elapsedSec": 3814,
+      "paceSecPerKm": 455,
+      "elevationM": 134,
+      "avgHr": 137,
+      "startTime": "2026-05-09T18:20:44.000Z",
+      "endTime": "2026-05-09T19:24:18.000Z",
+      "startLat": 49.063101,
+      "startLon": -120.828054,
+      "bbox": {
+        "minLat": 49.056705,
+        "maxLat": 49.065301,
+        "minLon": -120.83961,
+        "maxLon": -120.824229
+      }
+    }
+  },
+  "morning-run-18532839389": {
+    "id": "morning-run-18532839389",
+    "name": "Morning Run",
+    "stats": {
+      "name": "Morning Run",
+      "distanceKm": 6.185,
+      "movingSec": 2264,
+      "elapsedSec": 3239,
+      "paceSecPerKm": 366,
+      "elevationM": 42,
+      "avgHr": 148,
+      "startTime": "2026-05-16T16:32:22.000Z",
+      "endTime": "2026-05-16T17:26:21.000Z",
+      "startLat": 49.701871,
+      "startLon": -123.144165,
+      "bbox": {
+        "minLat": 49.68327,
+        "maxLat": 49.70213,
+        "minLon": -123.165933,
+        "maxLon": -123.144122
+      }
+    }
   }
 };
